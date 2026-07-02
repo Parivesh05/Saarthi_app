@@ -1,0 +1,36 @@
+{
+  "expo": {
+    "name": "Ubudy",
+    "slug": "Ubudy",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./src/assets/images/owl_mascot.png",
+    "userInterfaceStyle": "light",
+    "newArchEnabled": true,
+    "splash": {
+      "image": "./assets/splash-icon.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#ffffff"
+    },
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.anonymous.SarrathiApp"
+    },
+    "android": {
+      "adaptiveIcon": {
+        "foregroundImage": "./src/assets/images/owl_mascot.png",
+        "backgroundColor": "#ffffff"
+      },
+      "usesCleartextTraffic": true,
+      "edgeToEdgeEnabled": true,
+      "predictiveBackGestureEnabled": false,
+      "package": "com.anonymous.SarrathiApp"
+    },
+    "web": {
+      "favicon": "./src/assets/images/owl_mascot.png"
+    },
+    "plugins": [
+      "expo-secure-store"
+    ]
+  }
+}

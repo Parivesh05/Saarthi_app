@@ -1,0 +1,13 @@
+export const colors = {
+  APP_BACKGROUND:"#f0f0f7",
+  WHITE: '#FFFFFF',
+  BLACK: '#000000',
+  PRIMARY: '#2F80ED',
+  BACKGROUND: '#FFFFFF',
+  TEXT_PRIMARY: '#1C1C1E',
+  BORDER: '#E0E0E0',
+  APP_TEXT: '#4e73dc',
+  BUTTON_BACKGROUND: '#4581dc',
+  GREY: '#73778c',
+};
+

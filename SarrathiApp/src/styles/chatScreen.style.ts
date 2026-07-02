@@ -1,0 +1,232 @@
+import { StyleSheet } from "react-native";
+import { colors } from "./theme/colors";
+
+export const styles = StyleSheet.create({
+    screen: {
+        flex: 1,
+        backgroundColor: colors.WHITE,
+    },
+    // ── Custom Header ──────────────────────────────
+    header: {
+        flexDirection: "row",
+        alignItems: "center",
+        paddingHorizontal: 14,
+        paddingVertical: 12,
+        backgroundColor: colors.WHITE,
+        borderBottomWidth: 1,
+        borderBottomColor: colors.BORDER,
+    },
+    backBtn: {
+        width: 36,
+        height: 36,
+        borderRadius: 18,
+        backgroundColor: colors.APP_BACKGROUND,
+        justifyContent: "center",
+        alignItems: "center",
+        marginRight: 10,
+    },
+    avatarWrapper: {
+        position: "relative",
+        marginRight: 10,
+    },
+    avatar: {
+        width: 42,
+        height: 42,
+        borderRadius: 21,
+        backgroundColor: colors.APP_BACKGROUND,
+    },
+    onlineDot: {
+        position: "absolute",
+        bottom: 1,
+        right: 1,
+        width: 11,
+        height: 11,
+        borderRadius: 6,
+        backgroundColor: "#22C55E",
+        borderWidth: 2,
+        borderColor: colors.WHITE,
+    },
+    headerInfo: {
+        flex: 1,
+    },
+    headerName: {
+        fontSize: 16,
+        fontWeight: "700",
+        color: colors.TEXT_PRIMARY,
+    },
+    headerSubtitle: {
+        fontSize: 12,
+        color: colors.GREY,
+        marginTop: 1,
+    },
+    headerAction: {
+        width: 36,
+        height: 36,
+        borderRadius: 18,
+        backgroundColor: colors.APP_BACKGROUND,
+        justifyContent: "center",
+        alignItems: "center",
+    },
+    // ── Messages ───────────────────────────────────
+    messageList: {
+        flex: 1,
+        backgroundColor: colors.APP_BACKGROUND,
+    },
+    messageListContent: {
+        flexGrow: 1,
+        justifyContent: "flex-end",
+        paddingHorizontal: 16,
+        paddingVertical: 12,
+        gap: 10,
+    },
+    messageRow: {
+        flexDirection: "row",
+        alignItems: "flex-end",
+    },
+    messageRowSent: {
+        justifyContent: "flex-end",
+    },
+    messageRowReceived: {
+        justifyContent: "flex-start",
+    },
+    messageContent: {
+        maxWidth: "75%",
+    },
+    msgAvatar: {
+        width: 30,
+        height: 30,
+        borderRadius: 15,
+        marginRight: 8,
+        backgroundColor: colors.APP_BACKGROUND,
+    },
+    bubble: {
+        paddingHorizontal: 14,
+        paddingVertical: 10,
+        borderRadius: 18,
+    },
+    bubbleSent: {
+        backgroundColor: colors.PRIMARY,
+        borderBottomRightRadius: 4,
+    },
+    bubbleReceived: {
+        backgroundColor: colors.WHITE,
+        borderBottomLeftRadius: 4,
+        shadowColor: "#000",
+        shadowOffset: { width: 0, height: 1 },
+        shadowOpacity: 0.06,
+        shadowRadius: 3,
+        elevation: 2,
+    },
+    bubbleError: {
+        backgroundColor: "#FFF1F2",
+    },
+    bubbleQuestion: {
+        backgroundColor: "#EEF4FF",
+        borderBottomLeftRadius: 4,
+        shadowColor: "#000",
+        shadowOffset: { width: 0, height: 1 },
+        shadowOpacity: 0.06,
+        shadowRadius: 3,
+        elevation: 2,
+    },
+    bubbleClosing: {
+        backgroundColor: "#F5F5F5",
+        borderBottomLeftRadius: 4,
+    },
+    bubbleTextClosing: {
+        fontSize: 13,
+        color: "#73778c",
+        lineHeight: 20,
+        fontStyle: "italic",
+    },
+    distressBanner: {
+        flexDirection: "row",
+        alignItems: "center",
+        backgroundColor: "#FFF1F2",
+        borderTopWidth: 1,
+        borderTopColor: "#FECDD3",
+        paddingHorizontal: 16,
+        paddingVertical: 10,
+        gap: 8,
+    },
+    distressBannerText: {
+        flex: 1,
+        fontSize: 13,
+        color: "#BE123C",
+        lineHeight: 18,
+    },
+    bubbleTextSent: {
+        fontSize: 14,
+        color: colors.WHITE,
+        lineHeight: 20,
+    },
+    bubbleTextReceived: {
+        fontSize: 14,
+        color: colors.TEXT_PRIMARY,
+        lineHeight: 20,
+    },
+    timeText: {
+        fontSize: 10,
+        marginTop: 4,
+        color: colors.GREY,
+    },
+    timeTextSent: {
+        textAlign: "right",
+    },
+    typingRow: {
+        flexDirection: "row",
+        alignItems: "flex-end",
+        justifyContent: "flex-start",
+    },
+    typingBubble: {
+        flexDirection: "row",
+        alignItems: "center",
+        gap: 8,
+        paddingVertical: 12,
+    },
+    typingText: {
+        fontSize: 12,
+        color: colors.GREY,
+    },
+    // ── Input Bar ──────────────────────────────────
+    inputBar: {
+        flexDirection: "row",
+        alignItems: "center",
+        paddingHorizontal: 12,
+        paddingVertical: 10,
+        backgroundColor: colors.WHITE,
+        borderTopWidth: 1,
+        borderTopColor: colors.BORDER,
+        gap: 8,
+    },
+    attachBtn: {
+        width: 38,
+        height: 38,
+        borderRadius: 19,
+        backgroundColor: colors.APP_BACKGROUND,
+        justifyContent: "center",
+        alignItems: "center",
+    },
+    textInput: {
+        flex: 1,
+        minHeight: 40,
+        maxHeight: 100,
+        backgroundColor: colors.APP_BACKGROUND,
+        borderRadius: 20,
+        paddingHorizontal: 16,
+        paddingVertical: 8,
+        fontSize: 14,
+        color: colors.TEXT_PRIMARY,
+    },
+    sendBtn: {
+        width: 42,
+        height: 42,
+        borderRadius: 21,
+        backgroundColor: colors.PRIMARY,
+        justifyContent: "center",
+        alignItems: "center",
+    },
+    sendBtnDisabled: {
+        backgroundColor: colors.APP_BACKGROUND,
+    },
+});
