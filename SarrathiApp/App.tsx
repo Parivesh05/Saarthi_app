@@ -5,6 +5,7 @@ import { useFonts } from 'expo-font';
 import { appFonts } from "src/assets/fonts";
 import { Provider } from 'react-redux';
 import { store } from 'src/store';
+import './src/i18n'; // Initialize i18n
 
 export default function App() {
   const [fontsLoaded] = useFonts(appFonts);

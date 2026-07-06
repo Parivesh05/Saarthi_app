@@ -1,0 +1,116 @@
+{
+  "common": {
+    "ubudy": "uBudy",
+    "loading": "Loading...",
+    "cancel": "Cancel",
+    "save": "Save",
+    "delete": "Delete",
+    "edit": "Edit",
+    "done": "Done",
+    "comingSoon": "Coming Soon 🔜",
+    "comingSoonMessage": "Expert consultation feature will be available soon! We're working hard to bring you the best experience.",
+    "gotIt": "Got it!"
+  },
+  "splash": {
+    "title": "uBudy",
+    "subtitle": "Your mindful companion"
+  },
+  "welcome": {
+    "title": "Welcome to uBudy",
+    "subtitle": "Your journey to a peaceful mind begins here.",
+    "letsBegin": "Let's Begin",
+    "tagline": "Your mindful companion"
+  },
+  "auth": {
+    "welcomeBack": "Welcome back",
+    "loginSubtitle": "Continue your calm journey with uBudy",
+    "createAccount": "Create account",
+    "signupSubtitle": "Build your personalized calm space in uBudy",
+    "email": "Email Address",
+    "password": "Password",
+    "fullName": "Full Name",
+    "phoneNumber": "Phone Number",
+    "enterEmail": "Enter your email",
+    "enterPassword": "Enter your password",
+    "enterName": "Enter your name",
+    "enterPhone": "Enter your phone number",
+    "login": "Login",
+    "loggingIn": "Logging in...",
+    "signUp": "Sign up",
+    "signingUp": "Signing up...",
+    "createAnAccount": "Create an account?",
+    "alreadyHaveAccount": "Already have an account?",
+    "backToLogin": "Back to Login"
+  },
+  "home": {
+    "goodMorning": "Good Morning",
+    "hello": "Hello, {{name}}",
+    "mindEasy": "Mind Easy",
+    "mindEasySubtitle": "Take a moment to breathe and check in with yourself.",
+    "howAreYouFeeling": "How are you feeling today?",
+    "quickActions": "Quick actions",
+    "trackMood": "Track mood",
+    "startChat": "Start a chat",
+    "journal": "Journal",
+    "connectExpert": "Connect with Expert",
+    "dailyTip": "Daily Tip",
+    "dailyTipContent": "Taking short breaks during work can boost your productivity and reduce stress. Try the 20-20-20 rule: every 20 minutes, look at something 20 feet away for 20 seconds.",
+    "moods": {
+      "great": "Great",
+      "good": "Good",
+      "okay": "Okay",
+      "bad": "Bad",
+      "awful": "Awful"
+    }
+  },
+  "dashboard": {
+    "title": "Dashboard",
+    "wellnessScore": "Wellness Score",
+    "great": "GREAT",
+    "month": "MONTH",
+    "vsLastWeek": "+6% vs last week",
+    "ubudyNoticed": "uBudy noticed",
+    "stressInsight": "Your stress spikes on weekday evenings. A 5-minute wind-down reminder can help.",
+    "setReminder": "Set reminder",
+    "notNow": "Not now",
+    "weeklyMoodTrend": "Weekly mood trend",
+    "dayCheckIn": "Day check-in streak",
+    "weeklyGoal": "Weekly goal",
+    "sessionsToGo": "{{count}} sessions to go",
+    "habitsThisWeek": "Habits this week",
+    "meditate": "Meditate",
+    "breathe": "Breathe",
+    "sleep7h": "Sleep 7h+",
+    "todayCheckIn": "Today's check-in",
+    "mood": "Mood",
+    "energy": "Energy",
+    "sleep": "Sleep",
+    "upgradeTitle": "Upgrade for expert support",
+    "upgradeDesc": "Premium plans unlock expert sessions, deeper insights, and family wellness tools.",
+    "seePlans": "See plans"
+  },
+  "profile": {
+    "title": "Profile",
+    "name": "Name",
+    "email": "Email",
+    "role": "Role",
+    "subscription": "Subscription",
+    "aboutUbudy": "About uBudy",
+    "viewPlans": "View plans",
+    "meetTheTeam": "Meet the team",
+    "logout": "Log out"
+  },
+  "chat": {
+    "ubudyAI": "Ubudy AI",
+    "wellnessCompanion": "Your wellness companion",
+    "online": "🟢 Online",
+    "typingMessage": "Type a message...",
+    "ubudyTyping": "Ubudy is typing...",
+    "crisisMessage": "If you're in crisis, please call +91 8840209873 — a counselor is available now.",
+    "quickReplies": {
+      "happy": "I'm feeling happy 😊",
+      "stressed": "Feeling stressed 😰",
+      "motivation": "Need motivation 💪"
+    }
+  }
+}

@@ -1,0 +1,116 @@
+{
+  "common": {
+    "ubudy": "uBudy",
+    "loading": "लोड हो रहा है...",
+    "cancel": "रद्द करें",
+    "save": "सहेजें",
+    "delete": "हटाएं",
+    "edit": "संपादित करें",
+    "done": "पूर्ण",
+    "comingSoon": "जल्द आ रहा है 🔜",
+    "comingSoonMessage": "विशेषज्ञ परामर्श सुविधा जल्द ही उपलब्ध होगी! हम आपको सर्वोत्तम अनुभव देने के लिए कड़ी मेहनत कर रहे हैं।",
+    "gotIt": "समझ गया!"
+  },
+  "splash": {
+    "title": "uBudy",
+    "subtitle": "आपका मानसिक साथी"
+  },
+  "welcome": {
+    "title": "uBudy में आपका स्वागत है",
+    "subtitle": "शांत मन की ओर आपकी यात्रा यहाँ से शुरू होती है।",
+    "letsBegin": "शुरू करें",
+    "tagline": "आपका मानसिक साथी"
+  },
+  "auth": {
+    "welcomeBack": "वापसी पर स्वागत है",
+    "loginSubtitle": "uBudy के साथ अपनी शांत यात्रा जारी रखें",
+    "createAccount": "खाता बनाएं",
+    "signupSubtitle": "uBudy में अपना व्यक्तिगत शांत स्थान बनाएं",
+    "email": "ईमेल पता",
+    "password": "पासवर्ड",
+    "fullName": "पूरा नाम",
+    "phoneNumber": "फोन नंबर",
+    "enterEmail": "अपना ईमेल दर्ज करें",
+    "enterPassword": "अपना पासवर्ड दर्ज करें",
+    "enterName": "अपना नाम दर्ज करें",
+    "enterPhone": "अपना फोन नंबर दर्ज करें",
+    "login": "लॉगिन",
+    "loggingIn": "लॉगिन हो रहा है...",
+    "signUp": "साइन अप करें",
+    "signingUp": "साइन अप हो रहा है...",
+    "createAnAccount": "खाता बनाएं?",
+    "alreadyHaveAccount": "पहले से खाता है?",
+    "backToLogin": "लॉगिन पर वापस जाएं"
+  },
+  "home": {
+    "goodMorning": "सुप्रभात",
+    "hello": "नमस्ते, {{name}}",
+    "mindEasy": "मन शांत",
+    "mindEasySubtitle": "सांस लेने के लिए एक पल निकालें और खुद से जुड़ें।",
+    "howAreYouFeeling": "आज आप कैसा महसूस कर रहे हैं?",
+    "quickActions": "त्वरित क्रियाएं",
+    "trackMood": "मूड ट्रैक करें",
+    "startChat": "चैट शुरू करें",
+    "journal": "जर्नल",
+    "connectExpert": "विशेषज्ञ से जुड़ें",
+    "dailyTip": "दैनिक सुझाव",
+    "dailyTipContent": "काम के दौरान छोटे ब्रेक लेने से आपकी उत्पादकता बढ़ सकती है और तनाव कम हो सकता है। 20-20-20 नियम आज़माएं: हर 20 मिनट में, 20 सेकंड के लिए 20 फीट दूर किसी चीज़ को देखें।",
+    "moods": {
+      "great": "बहुत अच्छा",
+      "good": "अच्छा",
+      "okay": "ठीक है",
+      "bad": "बुरा",
+      "awful": "बहुत बुरा"
+    }
+  },
+  "dashboard": {
+    "title": "डैशबोर्ड",
+    "wellnessScore": "कल्याण स्कोर",
+    "great": "शानदार",
+    "month": "महीना",
+    "vsLastWeek": "पिछले सप्ताह से +6%",
+    "ubudyNoticed": "uBudy ने देखा",
+    "stressInsight": "आपका तनाव सप्ताह के दिनों की शाम को बढ़ता है। 5 मिनट का आराम रिमाइंडर मदद कर सकता है।",
+    "setReminder": "रिमाइंडर सेट करें",
+    "notNow": "अभी नहीं",
+    "weeklyMoodTrend": "साप्ताहिक मूड ट्रेंड",
+    "dayCheckIn": "दिन चेक-इन स्ट्रीक",
+    "weeklyGoal": "साप्ताहिक लक्ष्य",
+    "sessionsToGo": "{{count}} सत्र बाकी",
+    "habitsThisWeek": "इस सप्ताह की आदतें",
+    "meditate": "ध्यान",
+    "breathe": "सांस लें",
+    "sleep7h": "7 घंटे सोएं",
+    "todayCheckIn": "आज की चेक-इन",
+    "mood": "मूड",
+    "energy": "ऊर्जा",
+    "sleep": "नींद",
+    "upgradeTitle": "विशेषज्ञ सहायता के लिए अपग्रेड करें",
+    "upgradeDesc": "प्रीमियम योजनाएं विशेषज्ञ सत्र, गहरी अंतर्दृष्टि और पारिवारिक कल्याण उपकरण अनलॉक करती हैं।",
+    "seePlans": "योजनाएं देखें"
+  },
+  "profile": {
+    "title": "प्रोफ़ाइल",
+    "name": "नाम",
+    "email": "ईमेल",
+    "role": "भूमिका",
+    "subscription": "सदस्यता",
+    "aboutUbudy": "uBudy के बारे में",
+    "viewPlans": "योजनाएं देखें",
+    "meetTheTeam": "टीम से मिलें",
+    "logout": "लॉग आउट"
+  },
+  "chat": {
+    "ubudyAI": "Ubudy AI",
+    "wellnessCompanion": "आपका कल्याण साथी",
+    "online": "🟢 ऑनलाइन",
+    "typingMessage": "संदेश टाइप करें...",
+    "ubudyTyping": "Ubudy टाइप कर रहा है...",
+    "crisisMessage": "यदि आप संकट में हैं, तो कृपया +91 8840209873 पर कॉल करें — एक परामर्शदाता अभी उपलब्ध है।",
+    "quickReplies": {
+      "happy": "मैं खुश महसूस कर रहा हूं 😊",
+      "stressed": "तनाव महसूस हो रहा है 😰",
+      "motivation": "प्रेरणा चाहिए 💪"
+    }
+  }
+}

@@ -1,21 +1,26 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { NAVIGATION } from "src/constants/Navigation/navigation.constant";
 import { useNavigation } from "@react-navigation/native";
 import { RootStackParamList } from "src/interface/Navigation/navigation.interface";
-import { ActivityIndicator, Image, StyleSheet, Text, View, TouchableOpacity } from "react-native";
+import { ActivityIndicator, Image, StyleSheet, Text, View, TouchableOpacity, Modal } from "react-native";
 import { Images } from "src/assets/images";
 import { Ionicons } from "@expo/vector-icons";
 import { useAppDispatch, useAppSelector } from "src/hooks/useRedux";
 import { fetchUserProfile, logoutUser } from "src/store/slices/authSlice";
 import { Shadows, Colors } from "src/constants/designTokens";
 import { LinearGradient } from "expo-linear-gradient";
+import { useTranslation } from 'react-i18next';
+import { useLanguage } from 'src/hooks/useLanguage';
 
 const ProfileScreen = () => {
     const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>();
     const dispatch = useAppDispatch();
     const authUser = useAppSelector((state) => state.auth.user);
     const isProfileLoading = useAppSelector((state) => state.auth.isProfileLoading);
+    const { t, i18n } = useTranslation();
+    const { changeLanguage } = useLanguage();
+    const [showLanguageModal, setShowLanguageModal] = useState(false);
 
     useEffect(() => {
         if (!authUser) {
@@ -28,19 +33,34 @@ const ProfileScreen = () => {
         navigation.replace(NAVIGATION.LOGIN_SCREEN);
     };
 
+    const handleLanguageChange = async (lang: string) => {
+        await changeLanguage(lang);
+        setShowLanguageModal(false);
+    };
+
+    const getLanguageName = () => {
+        return i18n.language === 'hi' ? 'हिंदी' : 'English';
+    };
+
     const rows = [
-        { label: 'Name', value: authUser?.name ?? '-', icon: 'person-outline' },
-        { label: 'Email', value: authUser?.email ?? '-', icon: 'mail-outline' },
-        { label: 'Role', value: authUser?.role ?? 'USER', icon: 'shield-checkmark-outline' },
+        { label: t('profile.name'), value: authUser?.name ?? '-', icon: 'person-outline' },
+        { label: t('profile.email'), value: authUser?.email ?? '-', icon: 'mail-outline' },
+        { label: t('profile.role'), value: authUser?.role ?? 'USER', icon: 'shield-checkmark-outline' },
         {
-            label: 'Subscription',
-            value: 'View plans',
+            label: 'Language',
+            value: getLanguageName(),
+            icon: 'language-outline',
+            onPress: () => setShowLanguageModal(true),
+        },
+        {
+            label: t('profile.subscription'),
+            value: t('profile.viewPlans'),
             icon: 'card-outline',
             onPress: () => navigation.navigate(NAVIGATION.PRICING_SCREEN),
         },
         {
-            label: 'About uBudy',
-            value: 'Meet the team',
+            label: t('profile.aboutUbudy'),
+            value: t('profile.meetTheTeam'),
             icon: 'information-circle-outline',
             onPress: () => navigation.navigate(NAVIGATION.ABOUT_US_SCREEN),
         },
@@ -51,7 +71,7 @@ const ProfileScreen = () => {
             colors={[Colors.appBgGradientStart, Colors.appBgGradientEnd]}
             style={styles.container}
         >
-            <Text style={styles.headerText}>Profile</Text>
+            <Text style={styles.headerText}>{t('profile.title')}</Text>
 
             <View style={styles.profileCard}>
                 <Image
@@ -101,9 +121,54 @@ const ProfileScreen = () => {
             >
                 <View style={styles.logoutButton}>
                     <Ionicons name="log-out-outline" size={20} color="#EF5B5B" />
-                    <Text style={styles.logoutText}>Log out</Text>
+                    <Text style={styles.logoutText}>{t('profile.logout')}</Text>
                 </View>
             </TouchableOpacity>
+
+            {/* Language Selection Modal */}
+            <Modal
+                visible={showLanguageModal}
+                transparent
+                animationType="fade"
+                onRequestClose={() => setShowLanguageModal(false)}
+            >
+                <View style={styles.modalOverlay}>
+                    <View style={styles.modalContent}>
+                        <Text style={styles.modalTitle}>Select Language</Text>
+                        <TouchableOpacity
+                            style={[styles.langOption, i18n.language === 'en' && styles.langOptionActive]}
+                            onPress={() => handleLanguageChange('en')}
+                            activeOpacity={0.7}
+                        >
+                            <Text style={[styles.langText, i18n.language === 'en' && styles.langTextActive]}>
+                                English
+                            </Text>
+                            {i18n.language === 'en' && (
+                                <Ionicons name="checkmark-circle" size={22} color="#6A5AE0" />
+                            )}
+                        </TouchableOpacity>
+                        <TouchableOpacity
+                            style={[styles.langOption, i18n.language === 'hi' && styles.langOptionActive]}
+                            onPress={() => handleLanguageChange('hi')}
+                            activeOpacity={0.7}
+                        >
+                            <Text style={[styles.langText, i18n.language === 'hi' && styles.langTextActive]}>
+                                हिंदी (Hindi)
+                            </Text>
+                            {i18n.language === 'hi' && (
+                                <Ionicons name="checkmark-circle" size={22} color="#6A5AE0" />
+                            )}
+                        </TouchableOpacity>
+                        <TouchableOpacity
+                            style={styles.cancelBtn}
+                            onPress={() => setShowLanguageModal(false)}
+                            activeOpacity={0.8}
+                        >
+                            <Text style={styles.cancelText}>Cancel</Text>
+                        </TouchableOpacity>
+                    </View>
+                </View>
+            </Modal>
 
         </LinearGradient>
     )
@@ -217,6 +282,67 @@ const styles = StyleSheet.create({
         color: '#EF5B5B',
         fontSize: 16,
         fontWeight: '700',
+    },
+    modalOverlay: {
+        flex: 1,
+        backgroundColor: 'rgba(0, 0, 0, 0.6)',
+        justifyContent: 'center',
+        alignItems: 'center',
+        paddingHorizontal: 24,
+    },
+    modalContent: {
+        backgroundColor: '#FFFFFF',
+        borderRadius: 24,
+        padding: 24,
+        width: '100%',
+        maxWidth: 340,
+        shadowColor: '#000',
+        shadowOpacity: 0.3,
+        shadowOffset: { width: 0, height: 20 },
+        shadowRadius: 40,
+        elevation: 15,
+    },
+    modalTitle: {
+        fontSize: 22,
+        fontWeight: '800',
+        color: '#1A2340',
+        marginBottom: 20,
+        textAlign: 'center',
+    },
+    langOption: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        padding: 16,
+        borderRadius: 14,
+        backgroundColor: '#F5F5F7',
+        marginBottom: 12,
+    },
+    langOptionActive: {
+        backgroundColor: '#F0EDFC',
+        borderWidth: 2,
+        borderColor: '#6A5AE0',
+    },
+    langText: {
+        fontSize: 16,
+        fontWeight: '600',
+        color: '#4A4763',
+    },
+    langTextActive: {
+        color: '#6A5AE0',
+        fontWeight: '800',
+    },
+    cancelBtn: {
+        marginTop: 8,
+        padding: 16,
+        borderRadius: 14,
+        backgroundColor: '#F5F5F7',
+        alignItems: 'center',
+    },
+    cancelText: {
+        fontSize: 16,
+        fontWeight: '700',
+        color: '#8A8AA0',
     },
 });
 
