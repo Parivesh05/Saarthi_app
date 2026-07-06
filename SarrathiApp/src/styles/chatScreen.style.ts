@@ -4,7 +4,6 @@ import { colors } from "./theme/colors";
 export const styles = StyleSheet.create({
     screen: {
         flex: 1,
-        backgroundColor: colors.WHITE,
     },
     // ── Custom Header ──────────────────────────────
     header: {
@@ -184,16 +183,47 @@ export const styles = StyleSheet.create({
         gap: 8,
         paddingVertical: 12,
     },
+    typingOwl: {
+        width: 24,
+        height: 24,
+        borderRadius: 12,
+    },
     typingText: {
         fontSize: 12,
         color: colors.GREY,
+    },
+    // ── Quick Replies ──────────────────────────────
+    quickRepliesContainer: {
+        backgroundColor: colors.WHITE,
+        borderTopWidth: 1,
+        borderTopColor: colors.BORDER,
+        paddingVertical: 10,
+        paddingHorizontal: 12,
+    },
+    quickRepliesRow: {
+        flexDirection: "row",
+        gap: 8,
+    },
+    quickReplyChip: {
+        backgroundColor: colors.APP_BACKGROUND,
+        borderRadius: 20,
+        paddingHorizontal: 16,
+        paddingVertical: 10,
+        borderWidth: 1,
+        borderColor: "#E5E7EB",
+    },
+    quickReplyText: {
+        fontSize: 13,
+        color: colors.TEXT_PRIMARY,
+        fontWeight: "600",
     },
     // ── Input Bar ──────────────────────────────────
     inputBar: {
         flexDirection: "row",
         alignItems: "center",
         paddingHorizontal: 12,
-        paddingVertical: 10,
+        paddingTop: 10,
+        paddingBottom: 90,
         backgroundColor: colors.WHITE,
         borderTopWidth: 1,
         borderTopColor: colors.BORDER,
@@ -217,6 +247,14 @@ export const styles = StyleSheet.create({
         paddingVertical: 8,
         fontSize: 14,
         color: colors.TEXT_PRIMARY,
+    },
+    micBtn: {
+        width: 38,
+        height: 38,
+        borderRadius: 19,
+        backgroundColor: colors.APP_BACKGROUND,
+        justifyContent: "center",
+        alignItems: "center",
     },
     sendBtn: {
         width: 42,

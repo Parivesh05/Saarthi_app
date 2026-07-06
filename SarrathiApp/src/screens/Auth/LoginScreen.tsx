@@ -1,19 +1,8 @@
-import React from 'react';
-import {
-    View,
-    Text,
-    Image,
-    ImageBackground,
-    Alert,
-    TouchableOpacity,
-    ScrollView,
-} from 'react-native';
+import React, { useState } from 'react';
+import { View, Text, Image, Alert, TouchableOpacity, ScrollView, StyleSheet } from 'react-native';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
-import { styles } from 'src/styles/login.style';
-import AppButton from '@components/Common/AppButton';
-import AppTextInput from '@components/Common/AppTextInput';
-import { colors } from 'src/styles/theme/colors';
+import { PremiumInput } from '@components/Premium';
 import { Images } from 'src/assets/images';
 import { LoginFormValues } from 'src/interface/Auth/login.interface';
 import { useNavigation } from '@react-navigation/native';
@@ -22,19 +11,20 @@ import { RootStackParamList } from 'src/interface/Navigation/navigation.interfac
 import { NAVIGATION } from 'src/constants/Navigation/navigation.constant';
 import { useAppDispatch, useAppSelector } from 'src/hooks/useRedux';
 import { loginUser, clearAuthError } from 'src/store/slices/authSlice';
+import { onboardingStorage } from 'src/services/onboardingStorage';
+import { LinearGradient } from 'expo-linear-gradient';
+import { Ionicons } from '@expo/vector-icons';
+import { Colors } from 'src/constants/designTokens';
 
 const LoginScreen = () => {
-    const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>()
+    const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>();
     const dispatch = useAppDispatch();
     const { isLoading } = useAppSelector((state) => state.auth);
+    const [showPassword, setShowPassword] = useState(false);
 
     const LoginSchema = Yup.object().shape({
-        email: Yup.string()
-            .email('Invalid email')
-            .required('Email is required'),
-        password: Yup.string()
-            .min(6, 'Minimum 6 characters')
-            .required('Password is required'),
+        email: Yup.string().email('Invalid email').required('Email is required'),
+        password: Yup.string().min(6, 'Minimum 6 characters').required('Password is required'),
     });
 
     const initialValues: LoginFormValues = {
@@ -43,128 +33,172 @@ const LoginScreen = () => {
     };
 
     const handleLogin = async (values: LoginFormValues) => {
-        //navigation.navigate(NAVIGATION.MAIN_TABS);
-        
-        dispatch(clearAuthError());
-        const result = await dispatch(loginUser(values));
-        if (loginUser.fulfilled.match(result)) {
-            // Navigate on successful login
-            navigation.replace(NAVIGATION.MAIN_TABS);
-        } else if (loginUser.rejected.match(result)) {
-            Alert.alert('Login Failed', result.payload ?? 'Something went wrong');
-        }
+        // ══════════════════════════════════════════════════════════════
+        // TEMPORARY BYPASS: Server issue - comment out for production
+        // ══════════════════════════════════════════════════════════════
+        const done = await onboardingStorage.isCompleted();
+        navigation.replace(done ? NAVIGATION.MAIN_TABS : NAVIGATION.ONBOARDING_STEPS);
+        return;
+        // ══════════════════════════════════════════════════════════════
+        // ORIGINAL CODE: Uncomment when server is back
+        // ══════════════════════════════════════════════════════════════
+        // dispatch(clearAuthError());
+        // const result = await dispatch(loginUser(values));
+        // if (loginUser.fulfilled.match(result)) {
+        //     const done = await onboardingStorage.isCompleted();
+        //     navigation.replace(done ? NAVIGATION.MAIN_TABS : NAVIGATION.ONBOARDING_STEPS);
+        // } else if (loginUser.rejected.match(result)) {
+        //     Alert.alert('Login Failed', result.payload ?? 'Something went wrong');
+        // }
+        // ══════════════════════════════════════════════════════════════
     };
+
     return (
-
-        <ScrollView
+        <LinearGradient
+            colors={[Colors.appBgGradientStart, Colors.appBgGradientEnd]}
             style={styles.screen}
-            contentContainerStyle={styles.container}
-            keyboardShouldPersistTaps="handled"
-            showsVerticalScrollIndicator={false}
         >
-            <ImageBackground
-                style={{ position: "absolute", width: "100%", height: "100%" }}
-                source={Images.SPLASH_BACKGROUND}
-            />
-            <Image
-                style={styles.logo}
-                source={Images.UPDATED_OWL}
-            />
-            <Text style={styles.title}>Before we talk</Text>
-            <View style={styles.formikMainContainer}>
-                <Text style={styles.sectionTitle}>Login with email</Text>
+            <ScrollView
+                contentContainerStyle={styles.container}
+                keyboardShouldPersistTaps="handled"
+                showsVerticalScrollIndicator={false}
+            >
+            <View style={styles.logoWrap}>
+                <Image style={styles.logo} source={Images.U_LOGO} />
+            </View>
+            <Text style={styles.title}>Welcome back</Text>
+            <Text style={styles.subtitle}>Continue your calm journey with uBudy</Text>
 
-                <Formik
-                    initialValues={initialValues}
-                    validationSchema={LoginSchema}
-                    onSubmit={handleLogin}
-                >
-                    {({
-                        handleChange,
-                        handleBlur,
-                        handleSubmit,
-                        values,
-                        errors,
-                        touched,
-                    }) => (
+            <View style={styles.formContainer}>
+                <Formik initialValues={initialValues} validationSchema={LoginSchema} onSubmit={handleLogin}>
+                    {({ handleChange, handleBlur, handleSubmit, values, errors, touched }) => (
                         <>
-                            {/* Email */}
-                            <AppTextInput
-                                placeholder="Enter Email"
-                                containerStyle={styles.width94}
-                                inputStyle={styles.textInputStyle}
+                            <PremiumInput
+                                label="Email Address"
+                                placeholder="Enter your email"
+                                icon="mail-outline"
                                 keyboardType="email-address"
                                 autoCapitalize="none"
                                 value={values.email}
                                 onChangeText={handleChange('email')}
                                 onBlur={handleBlur('email')}
+                                error={touched.email && errors.email ? errors.email : undefined}
                             />
-                            {touched.email && errors.email && (
-                                <Text style={styles.error}>{errors.email}</Text>
-                            )}
 
-                            {/* Password */}
-                            <AppTextInput
-                                placeholder="Password"
-                                containerStyle={styles.width94}
-                                inputStyle={styles.textInputStyle}
-                                secureTextEntry
+                            <PremiumInput
+                                label="Password"
+                                placeholder="Enter your password"
+                                icon="lock-closed-outline"
+                                rightIcon={showPassword ? 'eye-off-outline' : 'eye-outline'}
+                                onRightIconPress={() => setShowPassword(!showPassword)}
+                                secureTextEntry={!showPassword}
                                 value={values.password}
                                 onChangeText={handleChange('password')}
                                 onBlur={handleBlur('password')}
+                                error={touched.password && errors.password ? errors.password : undefined}
                             />
-                            {touched.password && errors.password && (
-                                <Text style={styles.error}>{errors.password}</Text>
-                            )}
 
-                            {/* Login Button */}
-                            <AppButton
-                                title={isLoading ? "Logging in..." : "Login"}
-                                textStyle={styles.loginTextButton}
-                                onPress={() => handleSubmit()}
-                                style={styles.loginButton}
-                                iconLibrary="Ionicons"
-                                iconName="arrow-forward"
-                                iconPosition="right"
-                                disabled={isLoading}
-                            />
+                            <TouchableOpacity activeOpacity={0.9} onPress={() => handleSubmit()}>
+                                <LinearGradient colors={['#6A5AE0', '#4A90E2']} style={styles.primaryButton}>
+                                    <Text style={styles.primaryButtonText}>{isLoading ? 'Logging in...' : 'Login'}</Text>
+                                    <Ionicons name="arrow-forward" size={20} color="#FFFFFF" />
+                                </LinearGradient>
+                            </TouchableOpacity>
                         </>
                     )}
                 </Formik>
-                <Text style={styles.socialTitle}>or continue with</Text>
-                <View style={styles.socialRow}>
-                    <AppButton
-                        title="Gmail"
-                        textStyle={styles.buttonText}
-                        style={styles.socialButton}
-                        iconLibrary="FontAwesome"
-                        iconName="google"
-                        iconSize={17}
-                        iconColor="#EA4335"
-                        onPress={() => console.log('Gmail login pressed')}
-                    />
-                    <AppButton
-                        title="Facebook"
-                        textStyle={styles.buttonText}
-                        style={styles.socialButton}
-                        iconLibrary="FontAwesome"
-                        iconName="facebook"
-                        iconSize={17}
-                        iconColor="#1877F2"
-                        onPress={() => console.log('Facebook login pressed')}
-                    />
-                </View>
-                <TouchableOpacity 
-                onPress={()=>{navigation.navigate(NAVIGATION.SIGN_UP_SCREEN);}}
-                style={styles.signInContainer}>
+
+                <TouchableOpacity
+                    onPress={() => navigation.navigate(NAVIGATION.SIGN_UP_SCREEN)}
+                    style={styles.footerAction}
+                >
                     <Text style={styles.footerText}>Create an account?</Text>
-                    <Text
-                        style={styles.footerLink}>Sign up</Text>
+                    <Text style={styles.footerLink}>Sign up</Text>
                 </TouchableOpacity>
             </View>
-
-
         </ScrollView>
-    )
-}
+        </LinearGradient>
+    );
+};
+
+const styles = StyleSheet.create({
+    screen: {
+        flex: 1,
+    },
+    container: {
+        paddingHorizontal: 22,
+        paddingVertical: 20,
+        minHeight: '100%',
+    },
+    logoWrap: {
+        width: '100%',
+        alignItems: 'center',
+        marginTop: 12,
+        marginBottom: 14,
+    },
+    logo: {
+        width: 98,
+        height: 98,
+        borderRadius: 16,
+    },
+    title: {
+        fontSize: 27,
+        fontWeight: '700',
+        color: '#211E37',
+        textAlign: 'center',
+    },
+    subtitle: {
+        marginTop: 6,
+        color: '#8A8AA0',
+        fontSize: 14,
+        fontWeight: '600',
+        textAlign: 'center',
+    },
+    formContainer: {
+        marginTop: 22,
+        backgroundColor: '#FFFFFF',
+        borderRadius: 22,
+        padding: 24,
+        shadowColor: '#3C3278',
+        shadowOpacity: 0.08,
+        shadowOffset: { width: 0, height: 12 },
+        shadowRadius: 28,
+        elevation: 6,
+    },
+    primaryButton: {
+        marginTop: 16,
+        height: 58,
+        borderRadius: 20,
+        alignItems: 'center',
+        justifyContent: 'center',
+        flexDirection: 'row',
+        gap: 8,
+        shadowColor: '#6A5AE0',
+        shadowOpacity: 0.34,
+        shadowOffset: { width: 0, height: 16 },
+        shadowRadius: 32,
+        elevation: 8,
+    },
+    primaryButtonText: {
+        color: '#FFFFFF',
+        fontWeight: '700',
+        fontSize: 19,
+    },
+    footerAction: {
+        marginTop: 18,
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'center',
+        gap: 6,
+    },
+    footerText: {
+        color: '#8A8AA0',
+        fontWeight: '600',
+    },
+    footerLink: {
+        color: '#6A5AE0',
+        fontWeight: '800',
+    },
+});
+
 export default LoginScreen;

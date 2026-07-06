@@ -10,19 +10,20 @@ import {
 import { Ionicons } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 import { LineChart } from "react-native-chart-kit";
-import { styles } from "src/styles/moodScreen.style";
 import {
     MOOD_OPTIONS,
     MOOD_HISTORY,
     WEEKLY_MOOD,
     MOOD_STATS,
 } from "@utils/moodDummyData";
-import { colors } from "src/styles/theme/colors";
+import { StyleSheet } from "react-native";
+import { LinearGradient } from "expo-linear-gradient";
+import { Gradients, Shadows, Colors } from "src/constants/designTokens";
 
 const SCREEN_WIDTH = Dimensions.get("window").width;
 
 const MoodScreen = () => {
-    //const navigation = useNavigation();
+    const navigation = useNavigation();
     const [selectedMood, setSelectedMood] = useState<number | null>(null);
 
     const handleLog = () => {
@@ -36,25 +37,19 @@ const MoodScreen = () => {
     };
 
     return (
-        <View style={styles.screen}>
-
-
-            {/* ── Header ── */}
-            {/* <View style={styles.header}>
+        <LinearGradient
+            colors={[Colors.appBgGradientStart, Colors.appBgGradientEnd]}
+            style={styles.screen}
+        >
+            <View style={styles.header}>
                 <TouchableOpacity style={styles.backBtn} onPress={() => navigation.goBack()}>
-                    <Ionicons name="arrow-back" size={22} color={colors.TEXT_PRIMARY} />
+                    <Ionicons name="arrow-back" size={22} color="#211E37" />
                 </TouchableOpacity>
-                <Text style={styles.headerTitle}>Mood Tracker</Text>
-                <Text style={styles.headerDate}>1 Mar 2026</Text>
-            </View> */}
-            <Text style={{
-                fontSize: 22,
-                fontWeight: "bold", marginTop: 15, marginLeft: 20,marginBottom:15,
-            }}>Mood Tracker ⭐️</Text>
+                <Text style={styles.headerTitle}>Mood tracker</Text>
+            </View>
 
             <ScrollView style={styles.scroll} contentContainerStyle={styles.scrollContent} showsVerticalScrollIndicator={false}>
 
-                {/* ── Stats Row ── */}
                 <View style={styles.statsRow}>
 
                     <View style={styles.statCard}>
@@ -74,10 +69,9 @@ const MoodScreen = () => {
                     </View>
                 </View>
 
-                {/* ── How are you feeling? ── */}
                 <View style={styles.section}>
                     <Text style={styles.sectionTitle}>How are you feeling right now?</Text>
-                    <Text style={styles.sectionSubtitle}>Tap on an emoji to log your mood</Text>
+                    <Text style={styles.sectionSubtitle}>Tap on a mood to log your check-in</Text>
                     <View style={styles.moodRow}>
                         {MOOD_OPTIONS.map((item) => (
                             <TouchableOpacity
@@ -102,9 +96,8 @@ const MoodScreen = () => {
                     </View>
                 </View>
 
-                {/* ── Weekly Chart ── */}
                 <View style={styles.section}>
-                    <Text style={styles.sectionTitle}>Weekly Mood Trend 📈</Text>
+                    <Text style={styles.sectionTitle}>Weekly mood trend</Text>
                     <View style={styles.chartWrapper}>
                         <LineChart
                             data={WEEKLY_MOOD}
@@ -114,36 +107,35 @@ const MoodScreen = () => {
                             fromZero
                             segments={4}
                             chartConfig={{
-                                backgroundColor: colors.WHITE,
-                                backgroundGradientFrom: colors.WHITE,
-                                backgroundGradientTo: "#EFF6FF",
+                                backgroundColor: '#FFFFFF',
+                                backgroundGradientFrom: '#FFFFFF',
+                                backgroundGradientTo: '#FFFFFF',
                                 decimalPlaces: 0,
-                                color: (opacity = 1) => `rgba(47, 128, 237, ${opacity})`,
-                                labelColor: (opacity = 1) => `rgba(115, 119, 140, ${opacity})`,
+                                color: (opacity = 1) => `rgba(106, 90, 224, ${opacity})`,
+                                labelColor: (opacity = 1) => `rgba(138, 138, 160, ${opacity})`,
                                 propsForDots: {
                                     r: "5",
                                     strokeWidth: "2",
-                                    stroke: colors.PRIMARY,
+                                    stroke: '#6A5AE0',
                                 },
                                 propsForBackgroundLines: {
                                     strokeDasharray: "4,4",
-                                    stroke: colors.BORDER,
+                                    stroke: '#EFEDF7',
                                 },
                             }}
                             bezier
                             style={{ borderRadius: 12 }}
                         />
                     </View>
-                    <View style={{ flexDirection: "row", justifyContent: "space-around", marginTop: 10 }}>
+                    <View style={styles.scaleLegend}>
                         {["1 Awful", "2 Bad", "3 Okay", "4 Good", "5 Great"].map((label) => (
-                            <Text key={label} style={{ fontSize: 10, color: colors.GREY }}>{label}</Text>
+                            <Text key={label} style={styles.scaleLabel}>{label}</Text>
                         ))}
                     </View>
                 </View>
 
-                {/* ── Recent Mood History ── */}
                 <View style={styles.section}>
-                    <Text style={styles.sectionTitle}>Recent Entries 📋</Text>
+                    <Text style={styles.sectionTitle}>Recent entries</Text>
                     {MOOD_HISTORY.map((item, index) => (
                         <View
                             key={item.id}
@@ -169,13 +161,213 @@ const MoodScreen = () => {
 
             </ScrollView>
 
-            {/* ── Log Mood Button ── */}
-            <TouchableOpacity style={styles.logBtn} onPress={handleLog} activeOpacity={0.85}>
-                <Text style={styles.logBtnText}>Log Today's Mood ✨</Text>
+            <TouchableOpacity
+                style={styles.logBtnWrapper}
+                onPress={handleLog}
+                activeOpacity={0.85}
+            >
+                <LinearGradient
+                    colors={Gradients.primaryButton}
+                    start={{ x: 0, y: 0 }}
+                    end={{ x: 1, y: 0 }}
+                    style={styles.logBtn}
+                >
+                    <Text style={styles.logBtnText}>Log today's mood</Text>
+                </LinearGradient>
             </TouchableOpacity>
-        </View>
+        </LinearGradient>
     );
 };
+
+const styles = StyleSheet.create({
+    screen: {
+        flex: 1,
+    },
+    header: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        gap: 10,
+        paddingHorizontal: 22,
+        paddingTop: 10,
+    },
+    backBtn: {
+        width: 40,
+        height: 40,
+        borderRadius: 13,
+        alignItems: 'center',
+        justifyContent: 'center',
+        backgroundColor: '#FFFFFF',
+    },
+    headerTitle: {
+        color: '#211E37',
+        fontSize: 25,
+        fontWeight: '700',
+    },
+    scroll: {
+        flex: 1,
+    },
+    scrollContent: {
+        paddingHorizontal: 22,
+        paddingTop: 14,
+        paddingBottom: 120,
+        gap: 16,
+    },
+    statsRow: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        gap: 10,
+    },
+    statCard: {
+        flex: 1,
+        backgroundColor: '#FFFFFF',
+        borderRadius: 20,
+        paddingVertical: 14,
+        alignItems: 'center',
+    },
+    statEmoji: {
+        fontSize: 20,
+    },
+    statValue: {
+        color: '#211E37',
+        fontSize: 18,
+        marginTop: 6,
+        fontWeight: '700',
+    },
+    statLabel: {
+        color: '#8A8AA0',
+        fontSize: 12,
+        marginTop: 4,
+        fontWeight: '700',
+    },
+    section: {
+        backgroundColor: '#FFFFFF',
+        borderRadius: 22,
+        padding: 16,
+    },
+    sectionTitle: {
+        color: '#211E37',
+        fontSize: 18,
+        fontWeight: '600',
+    },
+    sectionSubtitle: {
+        color: '#8A8AA0',
+        marginTop: 4,
+        fontSize: 13,
+        fontWeight: '600',
+    },
+    moodRow: {
+        marginTop: 12,
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+    },
+    moodOption: {
+        width: '19%',
+        borderRadius: 19,
+        height: 98,
+        alignItems: 'center',
+        justifyContent: 'center',
+        gap: 6,
+    },
+    moodOptionSelected: {
+        borderWidth: 2.5,
+        transform: [{ translateY: -4 }],
+        shadowColor: '#6A5AE0',
+        shadowOpacity: 0.2,
+        shadowOffset: { width: 0, height: 12 },
+        shadowRadius: 24,
+    },
+    moodEmoji: {
+        fontSize: 26,
+    },
+    moodLabel: {
+        fontSize: 11,
+        fontWeight: '800',
+    },
+    chartWrapper: {
+        marginTop: 10,
+        marginLeft: -16,
+    },
+    scaleLegend: {
+        flexDirection: 'row',
+        justifyContent: 'space-around',
+        marginTop: 8,
+    },
+    scaleLabel: {
+        fontSize: 10,
+        color: '#8A8AA0',
+        fontWeight: '700',
+    },
+    historyItem: {
+        flexDirection: 'row',
+        gap: 12,
+        marginTop: 12,
+        borderBottomWidth: 1,
+        borderBottomColor: '#EFEDF7',
+        paddingBottom: 12,
+    },
+    historyItemLast: {
+        borderBottomWidth: 0,
+    },
+    historyDot: {
+        width: 40,
+        height: 40,
+        borderRadius: 12,
+        alignItems: 'center',
+        justifyContent: 'center',
+    },
+    historyEmoji: {
+        fontSize: 20,
+    },
+    historyContent: {
+        flex: 1,
+    },
+    historyTop: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+    },
+    historyMood: {
+        fontSize: 14,
+        fontWeight: '800',
+    },
+    historyTime: {
+        fontSize: 12,
+        color: '#8A8AA0',
+        fontWeight: '700',
+    },
+    historyNote: {
+        marginTop: 4,
+        color: '#4A4763',
+        fontSize: 13,
+        lineHeight: 20,
+        fontWeight: '600',
+    },
+    historyDate: {
+        marginTop: 3,
+        color: '#9A97AE',
+        fontSize: 11,
+        fontWeight: '700',
+    },
+    logBtnWrapper: {
+        position: 'absolute',
+        bottom: 26,
+        left: 22,
+        right: 22,
+        borderRadius: 20,
+        ...Shadows.primaryButton,
+    },
+    logBtn: {
+        height: 58,
+        borderRadius: 20,
+        alignItems: 'center',
+        justifyContent: 'center',
+    },
+    logBtnText: {
+        color: '#FFFFFF',
+        fontWeight: '700',
+        fontSize: 18,
+    },
+});
 
 export default MoodScreen;
 

@@ -9,6 +9,8 @@ import {
     KeyboardAvoidingView,
     Platform,
     ActivityIndicator,
+    Animated,
+    ScrollView,
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
@@ -18,6 +20,9 @@ import { colors } from "src/styles/theme/colors";
 import { ChatMessage } from "src/interface/Chat/chat.interface";
 import { chatService, getChatErrorMessage } from "src/services/chatService";
 import { useAppSelector } from "src/hooks/useRedux";
+import { LinearGradient } from "expo-linear-gradient";
+import { Colors } from "src/constants/designTokens";
+import { Images } from "src/assets/images";
 
 const formatChatTime = () =>
     new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
@@ -29,16 +34,43 @@ const ChatScreen = () => {
     const [inputText, setInputText] = useState("");
     const [isSending, setIsSending] = useState(false);
     const [isDistress, setIsDistress] = useState(false);
+    const [showQuickReplies, setShowQuickReplies] = useState(true);
     const flatListRef = useRef<FlatList>(null);
+    const owlPulse = useRef(new Animated.Value(1)).current;
 
-    const sendMessage = async () => {
-        const trimmed = inputText.trim();
-        if (!trimmed || isSending) return;
+    const quickReplies = [
+        "I'm feeling happy 😊",
+        "Feeling stressed 😰",
+        "Need motivation 💪",
+    ];
 
+    // Animate owl while typing
+    const startOwlAnimation = () => {
+        Animated.loop(
+            Animated.sequence([
+                Animated.timing(owlPulse, {
+                    toValue: 1.2,
+                    duration: 600,
+                    useNativeDriver: true,
+                }),
+                Animated.timing(owlPulse, {
+                    toValue: 1,
+                    duration: 600,
+                    useNativeDriver: true,
+                }),
+            ])
+        ).start();
+    };
+
+    const sendMessage = async (text?: string) => {
+        const messageText = text || inputText.trim();
+        if (!messageText || isSending) return;
+
+        setShowQuickReplies(false);
         const sentMessageCount = messages.filter((message) => message.isSent).length;
         const userMessage: ChatMessage = {
             id: `user-${Date.now()}`,
-            text: trimmed,
+            text: messageText,
             time: formatChatTime(),
             isSent: true,
         };
@@ -50,7 +82,7 @@ const ChatScreen = () => {
 
         try {
             const response = await chatService.sendMessage({
-                message: trimmed,
+                message: messageText,
                 user_id: authUser?.id ? String(authUser.id) : "test_mobile_user_001",
                 is_first_message: sentMessageCount === 0,
             });
@@ -83,6 +115,9 @@ const ChatScreen = () => {
                 isError: true,
             };
             setMessages((prev) => [...prev, errorMessage]);
+
+            // Show owl with error message
+            setTimeout(() => flatListRef.current?.scrollToEnd({ animated: true }), 100);
         } finally {
             setIsSending(false);
             setTimeout(() => flatListRef.current?.scrollToEnd({ animated: true }), 100);
@@ -106,7 +141,7 @@ const ChatScreen = () => {
     const renderMessage = ({ item }: { item: ChatMessage }) => (
         <View style={[styles.messageRow, item.isSent ? styles.messageRowSent : styles.messageRowReceived]}>
             {!item.isSent && (
-                <Image source={{ uri: CHAT_USER.avatar }} style={styles.msgAvatar} />
+                <Image source={Images.ON_BOARDING_1} style={styles.msgAvatar} />
             )}
             <View style={styles.messageContent}>
                 <View style={[styles.bubble, item.isSent ? styles.bubbleSent : getReceivedBubbleStyle(item)]}>
@@ -122,7 +157,10 @@ const ChatScreen = () => {
     );
 
     return (
-        <View style={styles.screen}>
+        <LinearGradient
+            colors={[Colors.appBgGradientStart, Colors.appBgGradientEnd]}
+            style={styles.screen}
+        >
             <KeyboardAvoidingView
                 style={styles.screen}
                 behavior={Platform.OS === "ios" ? "padding" : "height"}
@@ -134,7 +172,7 @@ const ChatScreen = () => {
                         <Ionicons name="arrow-back" size={22} color={colors.TEXT_PRIMARY} />
                     </TouchableOpacity>
                     <View style={styles.avatarWrapper}>
-                        <Image source={{ uri: CHAT_USER.avatar }} style={styles.avatar} />
+                        <Image source={Images.ON_BOARDING_1} style={styles.avatar} />
                         {CHAT_USER.isOnline && <View style={styles.onlineDot} />}
                     </View>
                     <View style={styles.headerInfo}>
@@ -162,9 +200,16 @@ const ChatScreen = () => {
                     ListFooterComponent={
                         isSending ? (
                             <View style={styles.typingRow}>
-                                <Image source={{ uri: CHAT_USER.avatar }} style={styles.msgAvatar} />
+                                <Image source={Images.ON_BOARDING_1} style={styles.msgAvatar} />
                                 <View style={[styles.bubble, styles.bubbleReceived, styles.typingBubble]}>
-                                    <ActivityIndicator size="small" color={colors.PRIMARY} />
+                                    <Animated.Image
+                                        source={Images.ON_BOARDING_1}
+                                        style={[
+                                            styles.typingOwl,
+                                            { transform: [{ scale: owlPulse }] }
+                                        ]}
+                                        onLoad={startOwlAnimation}
+                                    />
                                     <Text style={styles.typingText}>Ubudy is typing...</Text>
                                 </View>
                             </View>
@@ -179,6 +224,26 @@ const ChatScreen = () => {
                         <Text style={styles.distressBannerText}>
                             If you're in crisis, please call +91 8840209873 — a counselor is available now.
                         </Text>
+                    </View>
+                )}
+
+                {/* ── Quick Replies ── */}
+                {showQuickReplies && messages.length === 1 && (
+                    <View style={styles.quickRepliesContainer}>
+                        <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+                            <View style={styles.quickRepliesRow}>
+                                {quickReplies.map((reply, index) => (
+                                    <TouchableOpacity
+                                        key={index}
+                                        style={styles.quickReplyChip}
+                                        onPress={() => sendMessage(reply)}
+                                        disabled={isSending}
+                                    >
+                                        <Text style={styles.quickReplyText}>{reply}</Text>
+                                    </TouchableOpacity>
+                                ))}
+                            </View>
+                        </ScrollView>
                     </View>
                 )}
 
@@ -197,9 +262,12 @@ const ChatScreen = () => {
                         returnKeyType="default"
                         editable={!isSending}
                     />
+                    <TouchableOpacity style={styles.micBtn}>
+                        <Ionicons name="mic-outline" size={22} color={colors.PRIMARY} />
+                    </TouchableOpacity>
                     <TouchableOpacity
                         style={[styles.sendBtn, (!inputText.trim() || isSending) && styles.sendBtnDisabled]}
-                        onPress={sendMessage}
+                        onPress={() => sendMessage()}
                         disabled={!inputText.trim() || isSending}
                     >
                         <Ionicons
@@ -210,7 +278,7 @@ const ChatScreen = () => {
                     </TouchableOpacity>
                 </View>
             </KeyboardAvoidingView>
-        </View>
+        </LinearGradient>
     );
 };
 

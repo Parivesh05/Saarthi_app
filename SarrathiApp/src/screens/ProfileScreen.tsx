@@ -3,21 +3,16 @@ import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { NAVIGATION } from "src/constants/Navigation/navigation.constant";
 import { useNavigation } from "@react-navigation/native";
 import { RootStackParamList } from "src/interface/Navigation/navigation.interface";
-import { View } from "react-native-animatable";
-import { styles } from "src/styles/profileScreen.styles";
-import { ActivityIndicator, Image, Text, TouchableOpacity } from "react-native";
+import { ActivityIndicator, Image, StyleSheet, Text, View, TouchableOpacity } from "react-native";
 import { Images } from "src/assets/images";
-import MaterialCommunityIcons from "@expo/vector-icons/build/MaterialCommunityIcons";
-import { colors } from "src/styles/theme/colors";
-import Ionicons from "@expo/vector-icons/build/Ionicons";
-import AntDesign from "@expo/vector-icons/build/AntDesign";
-import Entypo from "@expo/vector-icons/build/Entypo";
-import MaterialIcons from "@expo/vector-icons/build/MaterialIcons";
+import { Ionicons } from "@expo/vector-icons";
 import { useAppDispatch, useAppSelector } from "src/hooks/useRedux";
 import { fetchUserProfile, logoutUser } from "src/store/slices/authSlice";
+import { Shadows, Colors } from "src/constants/designTokens";
+import { LinearGradient } from "expo-linear-gradient";
 
 const ProfileScreen = () => {
-    const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>()
+    const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>();
     const dispatch = useAppDispatch();
     const authUser = useAppSelector((state) => state.auth.user);
     const isProfileLoading = useAppSelector((state) => state.auth.isProfileLoading);
@@ -33,117 +28,196 @@ const ProfileScreen = () => {
         navigation.replace(NAVIGATION.LOGIN_SCREEN);
     };
 
+    const rows = [
+        { label: 'Name', value: authUser?.name ?? '-', icon: 'person-outline' },
+        { label: 'Email', value: authUser?.email ?? '-', icon: 'mail-outline' },
+        { label: 'Role', value: authUser?.role ?? 'USER', icon: 'shield-checkmark-outline' },
+        {
+            label: 'Subscription',
+            value: 'View plans',
+            icon: 'card-outline',
+            onPress: () => navigation.navigate(NAVIGATION.PRICING_SCREEN),
+        },
+        {
+            label: 'About uBudy',
+            value: 'Meet the team',
+            icon: 'information-circle-outline',
+            onPress: () => navigation.navigate(NAVIGATION.ABOUT_US_SCREEN),
+        },
+    ];
+
     return (
-        <View style={styles.container}>
-            <Text style={styles.headerText}>Profile👋</Text>
-            <View style={styles.boxContainer}>
+        <LinearGradient
+            colors={[Colors.appBgGradientStart, Colors.appBgGradientEnd]}
+            style={styles.container}
+        >
+            <Text style={styles.headerText}>Profile</Text>
+
+            <View style={styles.profileCard}>
                 <Image
                     style={styles.logo}
-                    source={Images.UPDATED_OWL}
+                    source={Images.U_LOGO}
                 />
-                <Text style={styles.headerText}>{authUser?.name ?? 'User'}</Text>
+                <Text style={styles.nameText}>{authUser?.name ?? 'User'}</Text>
+                <View style={styles.ratingRow}>
+                    {[1, 2, 3, 4, 5].map((star) => (
+                        <Ionicons key={star} name="star" size={16} color="#F5A623" />
+                    ))}
+                </View>
                 <Text style={styles.emailText}>{authUser?.email ?? 'No email available'}</Text>
-                <Text style={[styles.emailText, { letterSpacing: 3 }]}>⭐️⭐️⭐️⭐️⭐️</Text>
             </View>
 
             {isProfileLoading && (
-                <ActivityIndicator size="small" color={colors.PRIMARY} style={{ marginTop: 12 }} />
+                <ActivityIndicator size="small" color="#6A5AE0" style={{ marginTop: 12 }} />
             )}
 
-            <View style={styles.profileContainer}>
-                <View style={{ flexDirection: "row" }}>
-                    <View style={styles.width48per}>
-                        <View style={{ width: 40, height: 40, borderRadius: 20, backgroundColor: colors.APP_BACKGROUND, justifyContent: "center", alignItems: "center", flexDirection: "row" }}>
-                            <MaterialCommunityIcons name="face-man-profile" size={22} color={colors.PRIMARY} />
+            <View style={styles.listCard}>
+                {rows.map((item, index) => (
+                    <TouchableOpacity
+                        key={item.label}
+                        onPress={item.onPress}
+                        disabled={!item.onPress}
+                        activeOpacity={0.7}
+                    >
+                        <View style={[styles.row, index === rows.length - 1 && styles.rowLast]}>
+                            <View style={styles.leftRow}>
+                                <View style={styles.iconTile}>
+                                    <Ionicons name={item.icon as any} size={20} color="#6A5AE0" />
+                                </View>
+                                <Text style={styles.rowLabel}>{item.label}</Text>
+                            </View>
+                            <View style={styles.rightRow}>
+                                <Text style={styles.rowValue}>{item.value}</Text>
+                                {item.onPress && <Ionicons name="chevron-forward" size={18} color="#A6A6BC" />}
+                            </View>
                         </View>
-                        <Text style={styles.profileContainerText}>Name</Text>
-                    </View>
-                    <View style={styles.width48per}>
-                        <View style={{ flexDirection: 'row', alignItems: "center", justifyContent: 'flex-end', width: "100%", gap: 8 }}>
-                            <Text style={styles.emailText}>{authUser?.name ?? '-'}</Text>
-                            <Ionicons name="arrow-forward" size={22} color={colors.GREY} style={{ marginTop: 9, justifyContent: "flex-end" }} />
-                        </View>
-
-                    </View>
-                </View>
-
-                <View style={{ flexDirection: "row" }}>
-                    <View style={styles.width48per}>
-                        <View style={{ width: 40, height: 40, borderRadius: 20, backgroundColor: colors.APP_BACKGROUND, justifyContent: "center", alignItems: "center", flexDirection: "row" }}>
-                            <AntDesign name="heart" size={24} color={colors.PRIMARY} />
-                        </View>
-                        <Text style={styles.profileContainerText}>Favorites</Text>
-                    </View>
-                    <View style={styles.width48per}>
-                        <View style={{ flexDirection: 'row', alignItems: "center", justifyContent: 'flex-end', width: "100%", gap: 8 }}>
-                            <Ionicons name="arrow-forward" size={22} color={colors.GREY} style={{ marginTop: 9, justifyContent: "flex-end" }} />
-                        </View>
-
-                    </View>
-                </View>
-
-
-                <View style={{ flexDirection: "row" }}>
-                    <View style={styles.width48per}>
-                        <View style={{ width: 40, height: 40, borderRadius: 20, backgroundColor: colors.APP_BACKGROUND, justifyContent: "center", alignItems: "center", flexDirection: "row" }}>
-                            <Ionicons name="alarm" size={24} color={colors.PRIMARY} />
-                        </View>
-                        <Text style={styles.profileContainerText}>Reminder</Text>
-                    </View>
-                    <View style={styles.width48per}>
-                        <View style={{ flexDirection: 'row', alignItems: "center", justifyContent: 'flex-end', width: "100%", gap: 8 }}>
-                            <Ionicons name="arrow-forward" size={22} color={colors.GREY} style={{ marginTop: 9, justifyContent: "flex-end" }} />
-                        </View>
-
-                    </View>
-                </View>
-
-                <View style={{ flexDirection: "row" }}>
-                    <View style={styles.width48per}>
-                        <View style={{ width: 40, height: 40, borderRadius: 20, backgroundColor: colors.APP_BACKGROUND, justifyContent: "center", alignItems: "center", flexDirection: "row" }}>
-                            <AntDesign name="global" size={24} color={colors.PRIMARY} />
-                        </View>
-                        <Text style={styles.profileContainerText}>Role</Text>
-                    </View>
-                    <View style={styles.width48per}>
-                        <View style={{ flexDirection: 'row', alignItems: "center", justifyContent: 'flex-end', width: "100%", gap: 8 }}>
-                            <Text style={styles.emailText}>{authUser?.role ?? 'USER'}</Text>
-
-                        </View>
-
-                    </View>
-                </View>
-
-                <View style={{ flexDirection: "row" }}>
-                    <View style={styles.width48per}>
-                        <View style={{ width: 40, height: 40, borderRadius: 20, backgroundColor: colors.APP_BACKGROUND, justifyContent: "center", alignItems: "center", flexDirection: "row" }}>
-                            <Entypo name="credit-card" size={24} color={colors.PRIMARY} />
-                        </View>
-                        <Text style={styles.profileContainerText}>Subscription</Text>
-                    </View>
-                    <View style={styles.width48per}>
-                        <View style={{ flexDirection: 'row', alignItems: "center", justifyContent: 'flex-end', width: "100%", gap: 8 }}>
-                            <Text style={styles.emailText}>Premium</Text>
-
-                        </View>
-
-                    </View>
-                </View>
+                    </TouchableOpacity>
+                ))}
             </View>
 
             <TouchableOpacity
-                activeOpacity={0.8}
                 onPress={handleLogout}
-                style={{
-                width: "100%", backgroundColor: "#eddde8", padding
-                    : 15, justifyContent: "center", alignItems: "center", borderRadius: 10, marginTop: 20,flexDirection:"row",gap:10
-            }}
+                activeOpacity={0.7}
             >
-                <MaterialIcons name="logout" size={24} color="red" />
-                <Text style={[styles.profileContainerText, { color: "red" }]}>Logout</Text>
+                <View style={styles.logoutButton}>
+                    <Ionicons name="log-out-outline" size={20} color="#EF5B5B" />
+                    <Text style={styles.logoutText}>Log out</Text>
+                </View>
             </TouchableOpacity>
 
-        </View>
+        </LinearGradient>
     )
 }
+
+const styles = StyleSheet.create({
+    container: {
+        flex: 1,
+        paddingHorizontal: 22,
+        paddingTop: 12,
+    },
+    headerText: {
+        color: '#1A2340',
+        fontSize: 28,
+        fontWeight: '800',
+        letterSpacing: -0.5,
+    },
+    profileCard: {
+        marginTop: 16,
+        backgroundColor: 'rgba(255, 255, 255, 0.95)',
+        borderRadius: 24,
+        padding: 24,
+        alignItems: 'center',
+        ...Shadows.raisedCard,
+        borderWidth: 1,
+        borderColor: 'rgba(255, 255, 255, 0.6)',
+    },
+    logo: {
+        width: 88,
+        height: 88,
+        borderRadius: 16,
+    },
+    nameText: {
+        marginTop: 14,
+        color: '#1A2340',
+        fontSize: 23,
+        fontWeight: '800',
+        letterSpacing: -0.3,
+    },
+    ratingRow: {
+        flexDirection: 'row',
+        gap: 4,
+        marginTop: 6,
+    },
+    emailText: {
+        marginTop: 5,
+        color: '#8A8AA0',
+        fontWeight: '600',
+        fontSize: 14,
+    },
+    listCard: {
+        marginTop: 16,
+        backgroundColor: 'rgba(255, 255, 255, 0.95)',
+        borderRadius: 24,
+        paddingHorizontal: 16,
+        ...Shadows.raisedCard,
+        borderWidth: 1,
+        borderColor: 'rgba(255, 255, 255, 0.6)',
+    },
+    row: {
+        height: 68,
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+        borderBottomWidth: 1,
+        borderBottomColor: '#F0EEF7',
+    },
+    rowLast: {
+        borderBottomWidth: 0,
+    },
+    leftRow: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        gap: 12,
+    },
+    iconTile: {
+        width: 40,
+        height: 40,
+        borderRadius: 13,
+        backgroundColor: '#EEEBFA',
+        alignItems: 'center',
+        justifyContent: 'center',
+    },
+    rowLabel: {
+        color: '#1A2340',
+        fontSize: 15,
+        fontWeight: '800',
+    },
+    rightRow: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        gap: 6,
+    },
+    rowValue: {
+        color: '#8A8AA0',
+        fontSize: 13.5,
+        fontWeight: '700',
+    },
+    logoutButton: {
+        marginTop: 20,
+        backgroundColor: '#FCE7E7',
+        height: 56,
+        borderRadius: 18,
+        alignItems: 'center',
+        justifyContent: 'center',
+        flexDirection: 'row',
+        gap: 10,
+        ...Shadows.softCard,
+    },
+    logoutText: {
+        color: '#EF5B5B',
+        fontSize: 16,
+        fontWeight: '700',
+    },
+});
+
 export default ProfileScreen;

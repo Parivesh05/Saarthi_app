@@ -1,35 +1,117 @@
-import { Text, View } from "react-native"
-import { styles } from "src/styles/journal.styles"
+import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { Ionicons } from "@expo/vector-icons";
+import { LinearGradient } from "expo-linear-gradient";
+import { Gradients, Shadows, Colors } from "src/constants/designTokens";
 
 const JournalScreen = () => {
+        const cards = [
+                {
+                        title: "Today's Prompt",
+                        body: "What is one thing you are looking forward to this week?",
+                        icon: "✨",
+                },
+                {
+                        title: "Morning Gratitude",
+                        body: "Today I am grateful for the warm sunshine and the peaceful walk I had this morning.",
+                        icon: "🌤️",
+                },
+                {
+                        title: "Reflection on Growth",
+                        body: "I have been noticing how much calmer I feel compared to a month ago.",
+                        icon: "📈",
+                },
+        ];
+
     return (
-        <View style={styles.container}>
-            <Text style={styles.headerText}>Journal 📕</Text>
-            <Text>Express your thoughts freely</Text>
+        <LinearGradient
+            colors={[Colors.appBgGradientStart, Colors.appBgGradientEnd]}
+            style={styles.container}
+        >
+                        <Text style={styles.headerText}>Journal</Text>
+                        <Text style={styles.subHeader}>Express your thoughts freely</Text>
 
-            <View style={styles.boxContainer}>
-                <Text style={styles.promptText}>😎 Today's Prompt</Text>
-                <Text style={{textAlign:'justify'}}>What is one thing you're looking forward to this week?</Text>
-            </View>
+                        {cards.map((card) => (
+                                <View key={card.title} style={styles.boxContainer}>
+                                        <Text style={styles.promptText}>{card.icon} {card.title}</Text>
+                                        <Text style={styles.body}>{card.body}</Text>
+                                </View>
+                        ))}
 
-              <View style={styles.boxContainer}>
-                <Text style={styles.promptText}>😍 Morning Gratitude</Text>
-                <Text style={{textAlign:'justify',letterSpacing:1,lineHeight:20}}>Today I'm grateful for the warm sunshine and the peaceful walk I had this morning. I noticed the birds singing and it made me smile.</Text>
-            </View>
+                        <TouchableOpacity style={styles.writeButtonWrapper} activeOpacity={0.9}>
+                                <LinearGradient
+                                        colors={Gradients.primaryButton}
+                                        start={{ x: 0, y: 0 }}
+                                        end={{ x: 1, y: 0 }}
+                                        style={styles.writeButton}
+                                >
+                                        <Ionicons name="add" size={20} color="#FFFFFF" />
+                                        <Text style={styles.writeButtonText}>Start writing</Text>
+                                </LinearGradient>
+                        </TouchableOpacity>
+        </LinearGradient>
 
-             <View style={styles.boxContainer}>
-                <Text style={styles.promptText}>📈 Reflection on Growth</Text>
-                <Text style={{textAlign:'justify',letterSpacing:1,lineHeight:20}}>I've been noticing how much calmer I feel compared to a month ago. The breathing exercises are really helping.</Text>
-            </View>
-
-             <View style={styles.boxContainer}>
-                <Text style={styles.promptText}>🖐🏻 Challenging Day</Text>
-                <Text style={{textAlign:'justify',letterSpacing:1,lineHeight:20}}>Work was stressful but I managed to take breaks and practice mindfulness. Proud of myself for that.</Text>
-            </View>
-        </View>
-
-
-    )
+        );
 }
 
-export default JournalScreen
+const styles = StyleSheet.create({
+    container: {
+        flex: 1,
+        paddingHorizontal: 22,
+        paddingTop: 12,
+        gap: 14,
+    },
+    headerText: {
+        color: '#211E37',
+        fontSize: 27,
+        fontWeight: '700',
+    },
+    subHeader: {
+        color: '#8A8AA0',
+        fontSize: 14,
+        fontWeight: '600',
+        marginTop: -6,
+    },
+    boxContainer: {
+        backgroundColor: '#FFFFFF',
+        borderRadius: 22,
+        padding: 18,
+        shadowColor: '#3C3278',
+        shadowOpacity: 0.06,
+        shadowOffset: { width: 0, height: 8 },
+        shadowRadius: 20,
+        elevation: 4,
+    },
+    promptText: {
+        color: '#211E37',
+        fontSize: 18,
+        fontWeight: '700',
+    },
+    body: {
+        marginTop: 8,
+        color: '#4A4763',
+        fontSize: 14,
+        lineHeight: 22,
+        fontWeight: '600',
+    },
+    writeButtonWrapper: {
+        marginTop: 'auto',
+        marginBottom: 110,
+        borderRadius: 18,
+        ...Shadows.primaryButton,
+    },
+    writeButton: {
+        height: 56,
+        borderRadius: 18,
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'center',
+        gap: 8,
+    },
+    writeButtonText: {
+        color: '#FFFFFF',
+        fontSize: 16,
+        fontWeight: '700',
+    },
+});
+
+export default JournalScreen;

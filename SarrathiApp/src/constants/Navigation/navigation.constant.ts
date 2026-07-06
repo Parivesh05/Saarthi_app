@@ -1,11 +1,16 @@
 export const NAVIGATION = {
-    MAIN_TABS: "MainTabs",
-    SPLASH_SCREEN: "SplashScreen",
-    WELCOME_SCREEN: "WelcomeScreen",
-    LOGIN_SCREEN: "LoginScreen",
-    SIGN_UP_SCREEN: "SignupScreen",
+    MAIN_TABS: 'MainTabs',
+    SPLASH_SCREEN: 'SplashScreen',
+    WELCOME_SCREEN: 'WelcomeScreen',
+    LOGIN_SCREEN: 'LoginScreen',
+    SIGN_UP_SCREEN: 'SignupScreen',
     ONBOARDING_STEPS: 'OnboardingScreen',
-    HOME_SCREEN: 'HomeScreen',
-    PROFILE_SCREEN: 'ProfileScreen',
-    JOURNAL_SCREEN: 'JournalScreen'
-}
+    MOOD_SCREEN: 'MoodScreen',
+    ABOUT_US_SCREEN: 'AboutUsScreen',
+    PRICING_SCREEN: 'PricingScreen',
+    HOME_TAB: 'Home',
+    DASHBOARD_TAB: 'Dashboard',
+    CHAT_TAB: 'Chat',
+    JOURNAL_TAB: 'Journal',
+    PROFILE_TAB: 'Profile',
+} as const;

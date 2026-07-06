@@ -8,5 +8,6 @@ export const Images = {
     ON_BOARDING_3: require("../images/onboard_3.png"),
     SPLASH_BACKGROUND: require("../images/splash_background.jpg"),
     UPDATED_OWL: require("../images/owl_mascot.png"),
+    U_LOGO: require("../images/image.png"),
 };
 
