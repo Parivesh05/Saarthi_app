@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Image, ScrollView, StyleSheet, Text, View, TouchableOpacity, Modal } from "react-native";
+import { Image, ScrollView, StyleSheet, Text, View, TouchableOpacity, Modal, Animated } from "react-native";
 import { Images } from "src/assets/images";
 import { NAVIGATION } from "src/constants/Navigation/navigation.constant";
 import { useNavigation } from "@react-navigation/native";
@@ -14,27 +14,29 @@ const HomeScreen = () => {
     const dispatch = useAppDispatch();
     const authUser = useAppSelector((state) => state.auth.user);
     const [isLoading, setIsLoading] = useState(true);
-    const [refreshing, setRefreshing] = useState(false);
     const [showComingSoon, setShowComingSoon] = useState(false);
+    const shimmer = React.useRef(new Animated.Value(0)).current;
+
+    // Shimmer animation loop
+    useEffect(() => {
+        Animated.loop(
+            Animated.sequence([
+                Animated.timing(shimmer, { toValue: 1, duration: 900, useNativeDriver: true }),
+                Animated.timing(shimmer, { toValue: 0, duration: 900, useNativeDriver: true }),
+            ])
+        ).start();
+    }, [shimmer]);
 
     useEffect(() => {
-        const loadData = async () => {
-            setIsLoading(true);
-            if (!authUser?.name) {
-                await dispatch(fetchUserProfile());
-            }
-            // Simulate minimum loading time for smooth UX
-            setTimeout(() => setIsLoading(false), 800);
-        };
-        loadData();
-    }, [authUser?.name, dispatch]);
-
-    const onRefresh = async () => {
-        setRefreshing(true);
-        await dispatch(fetchUserProfile());
-        // Simulate refresh
-        setTimeout(() => setRefreshing(false), 1200);
-    };
+        // Fire-and-forget: don't await — server may be down/bypassed
+        if (!authUser?.name) {
+            dispatch(fetchUserProfile());
+        }
+        // Guaranteed timer so loading always ends
+        const timer = setTimeout(() => setIsLoading(false), 900);
+        return () => clearTimeout(timer);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []); // Run once on mount only
 
     const moods = [
         { name: 'Great', icon: '😍', color: '#22B573', bg: '#E8F5EE' },
@@ -47,8 +49,8 @@ const HomeScreen = () => {
     const quickActions = [
         { title: 'Track mood', icon: 'happy-outline', bg: '#EBF3FC', iconColor: '#3E8BEE', onPress: () => navigation.navigate(NAVIGATION.MOOD_SCREEN) },
         { title: 'Start a chat', icon: 'chatbubble-ellipses-outline', bg: '#F0EDFC', iconColor: '#6A5AE0', onPress: () => navigation.navigate(NAVIGATION.CHAT_TAB) },
-        { title: 'Journal', icon: 'book-outline', bg: '#FEF5E7', iconColor: '#F5A623', onPress: () => navigation.navigate(NAVIGATION.JOURNAL_TAB) },
-        { title: 'Connect with Expert', icon: 'people-outline', bg: '#E8F5EE', iconColor: '#22B573', onPress: () => setShowComingSoon(true) },
+        { title: 'Journal', icon: 'book-outline', bg: '#FEF5E7', iconColor: '#F5A623', onPress: () => navigation.navigate(NAVIGATION.JOURNAL_WRITING_SCREEN) },
+        { title: 'Expert session', icon: 'people-outline', bg: '#E8F5EE', iconColor: '#22B573', onPress: () => navigation.navigate(NAVIGATION.EXPERT_CONSULTATION_SCREEN) },
     ];
 
     return (
@@ -60,7 +62,9 @@ const HomeScreen = () => {
                 contentContainerStyle={styles.content}
                 showsVerticalScrollIndicator={false}
             >
-                {!isLoading && (
+                {isLoading ? (
+                    <SkeletonLoader shimmer={shimmer} />
+                ) : (
                     <>
                         <View style={styles.headerContainer}>
                             <View>
@@ -169,6 +173,49 @@ const HomeScreen = () => {
     )
 }
 
+// ── Skeleton Loader ──────────────────────────────────────────────
+const SkeletonLoader = ({ shimmer }: { shimmer: Animated.Value }) => {
+    const opacity = shimmer.interpolate({ inputRange: [0, 1], outputRange: [0.35, 0.75] });
+
+    const Bone = ({ w, h, r = 12, style }: { w: number | string; h: number; r?: number; style?: any }) => (
+        <Animated.View style={[{ width: w as any, height: h, borderRadius: r, backgroundColor: '#C4BFEA', opacity }, style]} />
+    );
+
+    return (
+        <View style={sk.wrap}>
+            {/* Header */}
+            <View style={sk.headerRow}>
+                <View style={sk.headerLeft}>
+                    <Bone w={80} h={12} r={6} style={{ marginBottom: 8 }} />
+                    <Bone w={180} h={28} r={10} />
+                </View>
+                <Bone w={62} h={62} r={16} />
+            </View>
+
+            {/* Hero card */}
+            <Bone w="100%" h={110} r={26} style={{ marginTop: 4 }} />
+
+            {/* Section label */}
+            <Bone w={200} h={16} r={8} style={{ marginTop: 20 }} />
+
+            {/* Mood tiles row */}
+            <View style={sk.moodRow}>
+                {[0,1,2,3,4].map(i => <Bone key={i} w={76} h={96} r={20} />)}
+            </View>
+
+            {/* Quick actions label */}
+            <Bone w={130} h={16} r={8} style={{ marginTop: 20 }} />
+
+            {/* Quick action tiles 2x2 */}
+            <View style={sk.grid}>
+                {[0,1,2,3].map(i => <Bone key={i} w="48%" h={110} r={22} />)}
+            </View>
+
+            {/* Daily tip card */}
+            <Bone w="100%" h={120} r={22} style={{ marginTop: 20 }} />
+        </View>
+    );
+};
 
 export default HomeScreen;
 
@@ -419,3 +466,32 @@ const styles = StyleSheet.create({
         fontWeight: '700',
     },
 });
+
+const sk = StyleSheet.create({
+    wrap: {
+        flex: 1,
+        gap: 0,
+    },
+    headerRow: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        marginBottom: 4,
+    },
+    headerLeft: {
+        gap: 0,
+    },
+    moodRow: {
+        flexDirection: 'row',
+        gap: 10,
+        marginTop: 12,
+    },
+    grid: {
+        flexDirection: 'row',
+        flexWrap: 'wrap',
+        justifyContent: 'space-between',
+        rowGap: 12,
+        marginTop: 12,
+    },
+});
+

@@ -98,6 +98,14 @@ const LoginScreen = () => {
                                 error={touched.password && errors.password ? errors.password : undefined}
                             />
 
+                            <TouchableOpacity
+                                style={styles.forgotRow}
+                                activeOpacity={0.7}
+                                onPress={() => navigation.navigate(NAVIGATION.FORGOT_PASSWORD_SCREEN)}
+                            >
+                                <Text style={styles.forgotText}>Forgot password?</Text>
+                            </TouchableOpacity>
+
                             <TouchableOpacity activeOpacity={0.9} onPress={() => handleSubmit()}>
                                 <LinearGradient colors={['#6A5AE0', '#4A90E2']} style={styles.primaryButton}>
                                     <Text style={styles.primaryButtonText}>{isLoading ? 'Logging in...' : 'Login'}</Text>
@@ -183,6 +191,16 @@ const styles = StyleSheet.create({
         color: '#FFFFFF',
         fontWeight: '700',
         fontSize: 19,
+    },
+    forgotRow: {
+        alignSelf: 'flex-end',
+        marginTop: 6,
+        marginBottom: 2,
+    },
+    forgotText: {
+        fontSize: 13,
+        color: '#6A5AE0',
+        fontWeight: '700',
     },
     footerAction: {
         marginTop: 18,

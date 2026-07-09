@@ -3,7 +3,7 @@ import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { NAVIGATION } from "src/constants/Navigation/navigation.constant";
 import { useNavigation } from "@react-navigation/native";
 import { RootStackParamList } from "src/interface/Navigation/navigation.interface";
-import { ActivityIndicator, Image, StyleSheet, Text, View, TouchableOpacity, Modal } from "react-native";
+import { ActivityIndicator, Image, StyleSheet, Text, View, TouchableOpacity, Modal, ScrollView } from "react-native";
 import { Images } from "src/assets/images";
 import { Ionicons } from "@expo/vector-icons";
 import { useAppDispatch, useAppSelector } from "src/hooks/useRedux";
@@ -21,6 +21,7 @@ const ProfileScreen = () => {
     const { t, i18n } = useTranslation();
     const { changeLanguage } = useLanguage();
     const [showLanguageModal, setShowLanguageModal] = useState(false);
+    const [showLogoutModal, setShowLogoutModal] = useState(false);
 
     useEffect(() => {
         if (!authUser) {
@@ -29,6 +30,7 @@ const ProfileScreen = () => {
     }, [authUser, dispatch]);
 
     const handleLogout = async () => {
+        setShowLogoutModal(false);
         await dispatch(logoutUser());
         navigation.replace(NAVIGATION.LOGIN_SCREEN);
     };
@@ -64,6 +66,25 @@ const ProfileScreen = () => {
             icon: 'information-circle-outline',
             onPress: () => navigation.navigate(NAVIGATION.ABOUT_US_SCREEN),
         },
+        {
+            label: 'Privacy Policy',
+            value: 'View',
+            icon: 'shield-outline',
+            onPress: () => navigation.navigate(NAVIGATION.PRIVACY_POLICY_SCREEN),
+        },
+        {
+            label: 'Terms of Service',
+            value: 'View',
+            icon: 'document-text-outline',
+            onPress: () => navigation.navigate(NAVIGATION.TERMS_OF_SERVICE_SCREEN),
+        },
+        {
+            label: 'Delete Account',
+            value: '',
+            icon: 'trash-outline',
+            onPress: () => navigation.navigate(NAVIGATION.ACCOUNT_DELETION_SCREEN),
+            isDanger: true,
+        },
     ];
 
     return (
@@ -73,6 +94,10 @@ const ProfileScreen = () => {
         >
             <Text style={styles.headerText}>{t('profile.title')}</Text>
 
+            <ScrollView
+                showsVerticalScrollIndicator={false}
+                contentContainerStyle={styles.scrollContent}
+            >
             <View style={styles.profileCard}>
                 <Image
                     style={styles.logo}
@@ -101,14 +126,26 @@ const ProfileScreen = () => {
                     >
                         <View style={[styles.row, index === rows.length - 1 && styles.rowLast]}>
                             <View style={styles.leftRow}>
-                                <View style={styles.iconTile}>
-                                    <Ionicons name={item.icon as any} size={20} color="#6A5AE0" />
+                                <View style={[styles.iconTile, (item as any).isDanger && styles.iconTileDanger]}>
+                                    <Ionicons
+                                        name={item.icon as any}
+                                        size={20}
+                                        color={(item as any).isDanger ? '#EF5B5B' : '#6A5AE0'}
+                                    />
                                 </View>
-                                <Text style={styles.rowLabel}>{item.label}</Text>
+                                <Text style={[styles.rowLabel, (item as any).isDanger && styles.rowLabelDanger]}>
+                                    {item.label}
+                                </Text>
                             </View>
                             <View style={styles.rightRow}>
-                                <Text style={styles.rowValue}>{item.value}</Text>
-                                {item.onPress && <Ionicons name="chevron-forward" size={18} color="#A6A6BC" />}
+                                {item.value ? <Text style={styles.rowValue}>{item.value}</Text> : null}
+                                {item.onPress && (
+                                    <Ionicons
+                                        name="chevron-forward"
+                                        size={18}
+                                        color={(item as any).isDanger ? '#EF5B5B' : '#A6A6BC'}
+                                    />
+                                )}
                             </View>
                         </View>
                     </TouchableOpacity>
@@ -116,7 +153,7 @@ const ProfileScreen = () => {
             </View>
 
             <TouchableOpacity
-                onPress={handleLogout}
+                onPress={() => setShowLogoutModal(true)}
                 activeOpacity={0.7}
             >
                 <View style={styles.logoutButton}>
@@ -124,6 +161,7 @@ const ProfileScreen = () => {
                     <Text style={styles.logoutText}>{t('profile.logout')}</Text>
                 </View>
             </TouchableOpacity>
+            </ScrollView>
 
             {/* Language Selection Modal */}
             <Modal
@@ -170,6 +208,41 @@ const ProfileScreen = () => {
                 </View>
             </Modal>
 
+            {/* Logout Confirmation Modal */}
+            <Modal
+                visible={showLogoutModal}
+                transparent
+                animationType="fade"
+                onRequestClose={() => setShowLogoutModal(false)}
+            >
+                <View style={styles.modalOverlay}>
+                    <View style={styles.modalContent}>
+                        <View style={styles.logoutModalIcon}>
+                            <Ionicons name="log-out-outline" size={32} color="#EF5B5B" />
+                        </View>
+                        <Text style={styles.modalTitle}>Log Out?</Text>
+                        <Text style={styles.logoutModalDesc}>
+                            Are you sure you want to log out of your uBudy account?
+                        </Text>
+                        <TouchableOpacity
+                            style={styles.logoutConfirmBtn}
+                            onPress={handleLogout}
+                            activeOpacity={0.9}
+                        >
+                            <Ionicons name="log-out-outline" size={18} color="#fff" />
+                            <Text style={styles.logoutConfirmText}>Yes, Log Out</Text>
+                        </TouchableOpacity>
+                        <TouchableOpacity
+                            style={styles.cancelBtn}
+                            onPress={() => setShowLogoutModal(false)}
+                            activeOpacity={0.8}
+                        >
+                            <Text style={styles.cancelText}>Cancel — Stay Logged In</Text>
+                        </TouchableOpacity>
+                    </View>
+                </View>
+            </Modal>
+
         </LinearGradient>
     )
 }
@@ -179,6 +252,9 @@ const styles = StyleSheet.create({
         flex: 1,
         paddingHorizontal: 22,
         paddingTop: 12,
+    },
+    scrollContent: {
+        paddingBottom: 24,
     },
     headerText: {
         color: '#1A2340',
@@ -252,10 +328,16 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center',
     },
+    iconTileDanger: {
+        backgroundColor: '#FCE7E7',
+    },
     rowLabel: {
         color: '#1A2340',
         fontSize: 15,
         fontWeight: '800',
+    },
+    rowLabelDanger: {
+        color: '#EF5B5B',
     },
     rightRow: {
         flexDirection: 'row',
@@ -343,6 +425,39 @@ const styles = StyleSheet.create({
         fontSize: 16,
         fontWeight: '700',
         color: '#8A8AA0',
+    },
+    logoutModalIcon: {
+        width: 68,
+        height: 68,
+        borderRadius: 22,
+        backgroundColor: '#FCE7E7',
+        alignItems: 'center',
+        justifyContent: 'center',
+        alignSelf: 'center',
+        marginBottom: 14,
+    },
+    logoutModalDesc: {
+        fontSize: 14,
+        color: '#4A4763',
+        textAlign: 'center',
+        lineHeight: 21,
+        fontWeight: '500',
+        marginBottom: 20,
+    },
+    logoutConfirmBtn: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'center',
+        gap: 8,
+        backgroundColor: '#EF5B5B',
+        height: 52,
+        borderRadius: 16,
+        marginBottom: 0,
+    },
+    logoutConfirmText: {
+        color: '#fff',
+        fontSize: 16,
+        fontWeight: '800',
     },
 });
 

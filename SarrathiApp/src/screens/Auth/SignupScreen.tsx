@@ -21,6 +21,8 @@ const SignupScreen = () => {
     const dispatch = useAppDispatch();
     const { isLoading } = useAppSelector((state) => state.auth);
     const [showPassword, setShowPassword] = useState(false);
+    const [termsAccepted, setTermsAccepted] = useState(false);
+    const [termsError, setTermsError] = useState('');
 
     const signUpSchema = Yup.object().shape({
         name: Yup.string().min(2, 'Minimum 2 characters').required('Name is required'),
@@ -38,6 +40,11 @@ const SignupScreen = () => {
     };
 
     const handleSignup = async (values: SignupFormValues) => {
+        if (!termsAccepted) {
+            setTermsError('You must accept the Terms of Service and Privacy Policy to continue');
+            return;
+        }
+        setTermsError('');
         // ══════════════════════════════════════════════════════════════
         // TEMPORARY BYPASS: Server issue - comment out for production
         // ══════════════════════════════════════════════════════════════
@@ -125,6 +132,39 @@ const SignupScreen = () => {
                                 error={touched.password && errors.password ? errors.password : undefined}
                             />
 
+                            {/* Terms & Privacy acceptance */}
+                            <TouchableOpacity
+                                style={styles.termsRow}
+                                activeOpacity={0.7}
+                                onPress={() => {
+                                    setTermsAccepted(!termsAccepted);
+                                    if (!termsAccepted) setTermsError('');
+                                }}
+                            >
+                                <View style={[styles.checkbox, termsAccepted && styles.checkboxChecked]}>
+                                    {termsAccepted && <Ionicons name="checkmark" size={14} color="#FFFFFF" />}
+                                </View>
+                                <Text style={styles.termsText}>
+                                    I agree to the{' '}
+                                    <Text
+                                        style={styles.termsLink}
+                                        onPress={() => navigation.navigate(NAVIGATION.TERMS_OF_SERVICE_SCREEN)}
+                                    >
+                                        Terms of Service
+                                    </Text>
+                                    {' '}and{' '}
+                                    <Text
+                                        style={styles.termsLink}
+                                        onPress={() => navigation.navigate(NAVIGATION.PRIVACY_POLICY_SCREEN)}
+                                    >
+                                        Privacy Policy
+                                    </Text>
+                                </Text>
+                            </TouchableOpacity>
+                            {termsError ? (
+                                <Text style={styles.termsErrorText}>{termsError}</Text>
+                            ) : null}
+
                             <TouchableOpacity activeOpacity={0.9} onPress={() => handleSubmit()}>
                                 <LinearGradient colors={['#6A5AE0', '#4A90E2']} style={styles.primaryButton}>
                                     <Text style={styles.primaryButtonText}>{isLoading ? 'Signing up...' : 'Create account'}</Text>
@@ -209,6 +249,47 @@ const styles = StyleSheet.create({
         color: '#FFFFFF',
         fontWeight: '700',
         fontSize: 18,
+    },
+    termsRow: {
+        flexDirection: 'row',
+        alignItems: 'flex-start',
+        gap: 10,
+        marginTop: 16,
+        marginBottom: 4,
+    },
+    checkbox: {
+        width: 22,
+        height: 22,
+        borderRadius: 7,
+        borderWidth: 2,
+        borderColor: '#D4CEED',
+        backgroundColor: '#FAFAFA',
+        alignItems: 'center',
+        justifyContent: 'center',
+        marginTop: 1,
+    },
+    checkboxChecked: {
+        backgroundColor: '#6A5AE0',
+        borderColor: '#6A5AE0',
+    },
+    termsText: {
+        flex: 1,
+        fontSize: 13,
+        color: '#4A4763',
+        lineHeight: 19,
+        fontWeight: '500',
+    },
+    termsLink: {
+        color: '#6A5AE0',
+        fontWeight: '700',
+        textDecorationLine: 'underline',
+    },
+    termsErrorText: {
+        fontSize: 12,
+        color: '#EF5B5B',
+        fontWeight: '600',
+        marginBottom: 4,
+        paddingLeft: 2,
     },
 });
 

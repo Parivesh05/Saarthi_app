@@ -1,10 +1,11 @@
 import React from 'react';
-import { ScrollView, StyleSheet, Text, View } from 'react-native';
+import { ScrollView, StyleSheet, Text, View, Image } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { Ionicons } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient';
 import { AnimatedButton } from 'src/components/Premium';
 import { Shadows, Colors } from 'src/constants/designTokens';
+import { Images } from 'src/assets/images';
 
 const AboutUsScreen = () => {
   const navigation = useNavigation();
@@ -51,28 +52,26 @@ const AboutUsScreen = () => {
         <Text style={styles.sectionTitle}>Meet the team</Text>
 
         <View style={styles.teamCard}>
-          <View style={styles.initialsCircle}>
-            <Text style={styles.initials}>DA</Text>
-          </View>
+          <Image style={styles.memberImage} source={Images.DHAIRYA} />
           <Text style={styles.memberName}>Dhairya Anand Gupta</Text>
           <Text style={styles.memberRole}>FOUNDER & CEO</Text>
           <Text style={styles.memberBio}>
-            Witnessed first-hand how India&apos;s mental-health access gap left millions without
-            support and built uBudy to close it. Leads product, clinical partnerships, regulatory
-            readiness, and fundraising, and drove the clinical co-design partnership behind the
-            platform&apos;s core IP.
+            A mission-driven founder focused on building accessible and ethical mental wellness solutions for India and beyond. Dhairya started Ubudy with the vision of creating a 24/7 AI-powered emotional support ecosystem that combines technology, empathy, and multilingual accessibility to make mental wellness support more affordable and scalable.
+            {'\n\n'}
+            Focused on solving emotional isolation and mental health accessibility challenges through AI, voice technology, and human-centered design.
           </Text>
         </View>
 
         <View style={styles.teamCard}>
-          <View style={styles.initialsCircle}>
-            <Text style={styles.initials}>DR</Text>
-          </View>
-          <Text style={styles.memberName}>Dr. Raja Roy Choudhury</Text>
-          <Text style={styles.memberRole}>MENTOR & NON-EXECUTIVE CHAIRMAN</Text>
-          <Text style={styles.memberBio}>
-            Double PhD in Economics and Psychology, 37+ years in business consulting and
-            behavioural-health leadership across PWC, Xerox, UBS, and Atharva University Mumbai.
+          <Image style={styles.memberImage} source={Images.RAJA} />
+          <Text style={styles.memberName}>Raja R Choudhary</Text>
+          <Text style={styles.memberRole}>MENTOR & ADVISOR</Text>
+          <Text style={styles.memberBio} numberOfLines={20}>
+            Holder of dual doctoral degrees in Economics & Psychology, certified by Harvard and Yale University. Exponent in disruptive and critical thinking with 36 years of relevant experience in business and technology consulting, performance management, executive coaching and mentoring.
+            {'\n\n'}
+            Possesses diverse experience consulting across industry verticals including IT, Telecom, Banking, Insurance, Healthcare and Behavioral Health. Managed large engagements across India, Australia, Africa & South Asia.
+            {'\n\n'}
+            22+ years of experience building and leading practices. Distinguished Faculty at SPJIMR, Visiting Professor at IIM Mumbai (NITIE), Ex Chief Happiness Officer at IIT Madras. Currently Group Director at Dnyaan Prasad Global University and runs 3rd Eye Knowledge Foundation covering mental health and well-being services.
           </Text>
         </View>
 
@@ -180,6 +179,12 @@ const styles = StyleSheet.create({
     fontSize: 24,
     fontWeight: '700',
     letterSpacing: 1,
+  },
+  memberImage: {
+    width: 120,
+    height: 120,
+    borderRadius: 20,
+    alignSelf: 'center',
   },
   memberName: {
     marginTop: 16,

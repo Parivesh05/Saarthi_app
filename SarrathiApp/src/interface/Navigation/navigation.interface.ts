@@ -3,11 +3,17 @@ export type RootStackParamList = {
   WelcomeScreen: undefined;
   LoginScreen: undefined;
   SignupScreen: undefined;
+  ForgotPasswordScreen: undefined;
   OnboardingScreen: undefined;
   MainTabs: undefined;
   MoodScreen: undefined;
   AboutUsScreen: undefined;
   PricingScreen: undefined;
+  PrivacyPolicyScreen: undefined;
+  TermsOfServiceScreen: undefined;
+  AccountDeletionScreen: undefined;
+  ExpertConsultationScreen: undefined;
+  JournalWritingScreen: undefined;
   [key: string]: undefined | object;
 };
 

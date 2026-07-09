@@ -35,6 +35,7 @@ const ChatScreen = () => {
     const [isSending, setIsSending] = useState(false);
     const [isDistress, setIsDistress] = useState(false);
     const [showQuickReplies, setShowQuickReplies] = useState(true);
+    const [disclaimerDismissed, setDisclaimerDismissed] = useState(false);
     const flatListRef = useRef<FlatList>(null);
     const owlPulse = useRef(new Animated.Value(1)).current;
 
@@ -186,6 +187,21 @@ const ChatScreen = () => {
                     </TouchableOpacity>
                 </View>
 
+                {/* ── Mental Health Disclaimer ── */}
+                {!disclaimerDismissed && (
+                    <View style={disclaimerStyles.banner}>
+                        <Ionicons name="information-circle-outline" size={16} color="#7C3AED" style={{ marginTop: 1 }} />
+                        <Text style={disclaimerStyles.text}>
+                            uBudy is a wellness companion, not a substitute for professional care.
+                            {' '}<Text style={disclaimerStyles.bold}>In a crisis?</Text>
+                            {' '}Call <Text style={disclaimerStyles.hotline}>iCall: +91 8840209873</Text>
+                        </Text>
+                        <TouchableOpacity onPress={() => setDisclaimerDismissed(true)} hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}>
+                            <Ionicons name="close" size={16} color="#7C3AED" />
+                        </TouchableOpacity>
+                    </View>
+                )}
+
                 {/* ── Messages ── */}
                 <FlatList
                     ref={flatListRef}
@@ -283,3 +299,33 @@ const ChatScreen = () => {
 };
 
 export default ChatScreen;
+
+import { StyleSheet } from 'react-native';
+
+const disclaimerStyles = StyleSheet.create({
+    banner: {
+        flexDirection: 'row',
+        alignItems: 'flex-start',
+        gap: 8,
+        backgroundColor: '#F0EDFC',
+        paddingHorizontal: 14,
+        paddingVertical: 10,
+        borderBottomWidth: 1,
+        borderBottomColor: '#E0D9F8',
+    },
+    text: {
+        flex: 1,
+        fontSize: 12,
+        color: '#4C2D8C',
+        lineHeight: 17,
+        fontWeight: '500',
+    },
+    bold: {
+        fontWeight: '800',
+        color: '#3B1F6E',
+    },
+    hotline: {
+        fontWeight: '800',
+        color: '#EF5B5B',
+    },
+});
